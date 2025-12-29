@@ -2,6 +2,7 @@ package clerk
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -39,8 +40,11 @@ func (c Config) NewAuthMiddleware() func(http.Handler) http.Handler {
 	clerkapi.SetKey(c.SecretKey)
 
 	// Pre-warm JWKS cache
-	ctx := context.Background()
-	_, _ = jwks.Get(ctx, &jwks.GetParams{})
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if _, err := jwks.Get(ctx, &jwks.GetParams{}); err != nil {
+		slog.Error("failed to pre-warm JWKS cache", "error", err)
+	}
 
 	return clerkhttp.WithHeaderAuthorization(
 		clerkhttp.Leeway(5 * time.Second),
