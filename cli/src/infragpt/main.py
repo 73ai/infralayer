@@ -95,21 +95,9 @@ def auth():
 
 
 @auth.command(name="login")
-@click.option(
-    "--api-url",
-    "-a",
-    default=None,
-    help="API base URL (default: https://api.infragpt.io)",
-)
-@click.option(
-    "--console-url",
-    "-c",
-    default=None,
-    help="Console base URL for verification (default: https://app.infragpt.io)",
-)
-def auth_login_cli(api_url, console_url):
+def auth_login_cli():
     """Authenticate with InfraGPT platform."""
-    auth_login(api_base_url=api_url, console_base_url=console_url)
+    auth_login()
 
 
 @auth.command(name="logout")
@@ -134,8 +122,6 @@ def auth_status_cli():
         console.print(f"Organization ID: [cyan]{status.organization_id}[/cyan]")
     if status.user_id:
         console.print(f"User ID: [cyan]{status.user_id}[/cyan]")
-    if status.api_base_url:
-        console.print(f"API: [dim]{status.api_base_url}[/dim]")
     if status.expires_at:
         console.print(f"Token expires: [dim]{status.expires_at}[/dim]")
 
@@ -219,6 +205,11 @@ def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
         authenticated = is_authenticated()
         sandbox = is_sandbox_mode()
         gke_cluster = None
+
+        if sandbox and not authenticated:
+            console.print("[yellow]Sandbox mode requires authentication.[/yellow]")
+            console.print("\nRun [cyan]infragpt auth login[/cyan] to authenticate.")
+            sys.exit(1)
 
         if authenticated and sandbox:
             # STRICT MODE - all failures exit CLI

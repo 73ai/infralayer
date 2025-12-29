@@ -18,6 +18,22 @@ CONFIG_DIR = pathlib.Path.home() / ".config" / "infragpt"
 CONFIG_FILE = CONFIG_DIR / "config.yaml"
 
 
+def is_dev_mode() -> bool:
+    return os.environ.get("INFRAGPT_DEV_MODE", "").lower() == "true"
+
+
+def get_api_base_url() -> str:
+    if is_dev_mode():
+        return "http://localhost:8080"
+    return "https://api.infragpt.io"
+
+
+def get_console_base_url() -> str:
+    if is_dev_mode():
+        return "http://localhost:5173"
+    return "https://app.infragpt.io"
+
+
 def load_config() -> Dict[str, Any]:
     """Load configuration from config file."""
     if not CONFIG_FILE.exists():
