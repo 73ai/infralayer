@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useOrganization, useAuth, useUser } from "@clerk/clerk-react";
+import { useEffect, useState, useRef } from "react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { autorun } from "mobx";
 import { useApiClient } from "@/lib/api";
 import { userStore } from "@/stores/UserStore";
@@ -19,22 +19,23 @@ export const useOnboardingGuard = (): OnboardingStatus => {
     error: null,
   });
 
-  const { organization, isLoaded: orgLoaded } = useOrganization();
-  const { isSignedIn, isLoaded: authLoaded } = useAuth();
+  const { isSignedIn, isLoaded: authLoaded, orgId: authOrgId } = useAuth();
   const { user } = useUser();
   const { getMe } = useApiClient();
 
   const clerkUserId = user?.id;
-  const clerkOrgId = organization?.id;
+
+  const loadedForOrgRef = useRef<string | null>(null);
+  const retryStateRef = useRef<{
+    orgId: string | null;
+    failCount: number;
+    lastAttempt: number;
+  }>({ orgId: null, failCount: 0, lastAttempt: 0 });
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
-      // Wait for auth to load first
-      if (!authLoaded) {
-        return;
-      }
+      if (!authLoaded) return;
 
-      // If not signed in, mark as not complete
       if (!isSignedIn) {
         setStatus({
           isLoading: false,
@@ -45,13 +46,7 @@ export const useOnboardingGuard = (): OnboardingStatus => {
         return;
       }
 
-      // Wait for organization to load
-      if (!orgLoaded) {
-        return;
-      }
-
-      // If no organization, user needs to create one
-      if (!organization?.id) {
+      if (!authOrgId) {
         setStatus({
           isLoading: false,
           isComplete: false,
@@ -61,25 +56,35 @@ export const useOnboardingGuard = (): OnboardingStatus => {
         return;
       }
 
-      // Load user profile and check onboarding completion
+      if (!clerkUserId) return;
+
       try {
-        // Wait for any in-progress load to complete before checking
-        if (userStore.loading) {
-          return; // Stay in loading state, autorun will re-run when store changes
+        if (userStore.loading) return;
+
+        if (retryStateRef.current.orgId !== authOrgId) {
+          retryStateRef.current = { orgId: authOrgId, failCount: 0, lastAttempt: 0 };
         }
 
-        // Load user profile if not already loaded
-        if (!userStore.userProfile && clerkUserId && clerkOrgId) {
-          await userStore.loadUserProfile(getMe, clerkUserId, clerkOrgId);
+        // Exponential backoff for retries
+        if (retryStateRef.current.failCount > 0) {
+          const backoffMs = Math.min(1000 * Math.pow(2, retryStateRef.current.failCount - 1), 10000);
+          const timeSinceLastAttempt = Date.now() - retryStateRef.current.lastAttempt;
+          if (timeSinceLastAttempt < backoffMs) {
+            setTimeout(() => {
+              void userStore.loading;
+            }, backoffMs - timeSinceLastAttempt);
+            return;
+          }
         }
 
-        // Check if metadata exists and has required fields
-        const isComplete = Boolean(
-          userStore.userProfile?.metadata?.company_size &&
-            userStore.userProfile?.metadata?.team_size &&
-            userStore.userProfile?.metadata?.use_cases?.length > 0 &&
-            userStore.userProfile?.metadata?.observability_stack?.length > 0,
-        );
+        if (!userStore.userProfile || loadedForOrgRef.current !== authOrgId) {
+          retryStateRef.current.lastAttempt = Date.now();
+          await userStore.loadUserProfile(getMe, clerkUserId, authOrgId);
+          loadedForOrgRef.current = authOrgId;
+          retryStateRef.current.failCount = 0;
+        }
+
+        const isComplete = Boolean(userStore.userProfile?.metadata?.completed_at);
 
         setStatus({
           isLoading: false,
@@ -88,35 +93,31 @@ export const useOnboardingGuard = (): OnboardingStatus => {
           error: null,
         });
       } catch {
-        // If user profile doesn't exist in our backend yet, onboarding is incomplete
+        retryStateRef.current.failCount++;
+        retryStateRef.current.lastAttempt = Date.now();
+
         setStatus({
           isLoading: false,
           isComplete: false,
-          hasOrganization: true, // Org exists in Clerk, but user profile not in our backend
+          hasOrganization: true,
           error: null,
         });
       }
     };
 
-    // Use MobX autorun to observe userStore changes (loading, userProfile)
     const dispose = autorun(() => {
-      // Access observables to track them (void to satisfy TypeScript unused var check)
       void userStore.loading;
       void userStore.userProfile;
-
-      // Trigger the async check (runs outside autorun context)
       checkOnboardingStatus();
     });
 
     return () => dispose();
   }, [
-    organization?.id,
     isSignedIn,
     authLoaded,
-    orgLoaded,
+    authOrgId,
     getMe,
     clerkUserId,
-    clerkOrgId,
   ]);
 
   return status;
