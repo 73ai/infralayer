@@ -28,7 +28,7 @@ from infragpt.auth import (
     validate_token_with_api,
     refresh_token_strict,
     fetch_gcp_credentials_strict,
-    fetch_gke_cluster_info_strict,
+    fetch_gke_cluster_info,
     write_gcp_credentials_file,
     cleanup_credentials,
 )
@@ -36,7 +36,6 @@ from infragpt.exceptions import (
     AuthValidationError,
     TokenRefreshError,
     GCPCredentialError,
-    GKEClusterError,
     ContainerSetupError,
 )
 
@@ -216,11 +215,14 @@ def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
             validate_token_with_api()
             refresh_token_strict()
             gcp_creds = fetch_gcp_credentials_strict()
-            gke_cluster = fetch_gke_cluster_info_strict()
+            gke_cluster = fetch_gke_cluster_info()
             gcp_creds_path = write_gcp_credentials_file(gcp_creds)
             if verbose:
                 console.print("[dim]GCP credentials loaded.[/dim]")
-                console.print(f"[dim]GKE cluster: {gke_cluster.cluster_name}[/dim]")
+                if gke_cluster:
+                    console.print(f"[dim]GKE cluster: {gke_cluster.cluster_name}[/dim]")
+                else:
+                    console.print("[dim]GKE cluster: auto-discover[/dim]")
 
         if sandbox:
             removed = cleanup_old_containers()
@@ -255,7 +257,7 @@ def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
         console.print(f"[red]Authentication Error: {e}[/red]")
         console.print("\nRun [cyan]infragpt auth login[/cyan] to re-authenticate.")
         sys.exit(1)
-    except (GCPCredentialError, GKEClusterError) as e:
+    except GCPCredentialError as e:
         console.print(f"[red]Credential Error: {e}[/red]")
         sys.exit(1)
     except (DockerNotAvailableError, ContainerSetupError) as e:
