@@ -2,11 +2,14 @@
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 import logging
 
 from src.models.agent import AgentResponse
 from src.models.context import AgentContext
+
+if TYPE_CHECKING:
+    from src.llm import LiteLLMClient
 
 
 class AgentType(Enum):
@@ -25,7 +28,7 @@ class BaseAgent(ABC):
         self.logger = logging.getLogger(f"{__name__}.{agent_type.value}")
 
         # LLM client will be injected during initialization
-        self.llm_client: Optional[object] = None
+        self.llm_client: Optional["LiteLLMClient"] = None
 
         self.logger.info(f"Initialized {agent_type.value} agent")
 
@@ -60,7 +63,7 @@ class BaseAgent(ABC):
         """
         pass
 
-    def set_llm_client(self, llm_client: object) -> None:
+    def set_llm_client(self, llm_client: "LiteLLMClient") -> None:
         """Set the LLM client for this agent."""
         self.llm_client = llm_client
         self.logger.debug(f"Set LLM client for {self.name} agent")

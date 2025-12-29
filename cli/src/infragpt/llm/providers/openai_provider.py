@@ -3,15 +3,12 @@ OpenAI provider implementation using direct SDK.
 """
 
 import json
-from typing import List, Dict, Any, Iterator, Optional, TYPE_CHECKING
+from typing import List, Dict, Any, Iterator, Optional
 from openai import OpenAI
 import openai
 
-if TYPE_CHECKING:
-    from ..models import Tool
-
 from ..base import BaseLLMProvider
-from ..models import StreamChunk, ToolCall
+from ..models import StreamChunk, ToolCall, Tool
 from ..exceptions import (
     AuthenticationError,
     RateLimitError,
@@ -24,7 +21,7 @@ from ..exceptions import (
 class OpenAIProvider(BaseLLMProvider):
     """OpenAI provider using official Python SDK."""
 
-    def _initialize_client(self, **kwargs):
+    def _initialize_client(self, **kwargs: Any) -> OpenAI:
         """Initialize OpenAI client."""
         return OpenAI(api_key=self.api_key)
 
@@ -54,8 +51,8 @@ class OpenAIProvider(BaseLLMProvider):
     def stream(
         self,
         messages: List[Dict[str, Any]],
-        tools: Optional[List[Dict]] = None,
-        **kwargs,
+        tools: Optional[List[Tool]] = None,
+        **kwargs: Any,
     ) -> Iterator[StreamChunk]:
         """Stream response with unified tool calling support."""
         try:
@@ -111,7 +108,7 @@ class OpenAIProvider(BaseLLMProvider):
             raise self._map_error(e)
 
     def _build_request(
-        self, messages: List[Dict[str, Any]], tools: Optional[List[Dict]], **kwargs
+        self, messages: List[Dict[str, Any]], tools: Optional[List[Tool]], **kwargs: Any
     ) -> Dict[str, Any]:
         """Build OpenAI API request."""
         request = {
@@ -151,7 +148,7 @@ class OpenAIProvider(BaseLLMProvider):
         # OpenAI format is already our unified format
         return messages
 
-    def _convert_tools(self, tools: List["Tool"]) -> List[Dict]:
+    def _convert_tools(self, tools: List[Tool]) -> List[Dict[str, Any]]:
         """Convert Tool objects to OpenAI format."""
 
         openai_tools = []

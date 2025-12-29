@@ -162,7 +162,7 @@ class CommandExecutor(ExecutorInterface):
 
         return "".join(output_lines)
 
-    def _timeout_handler(self):
+    def _timeout_handler(self) -> None:
         """Handle command timeout."""
         if self.current_process and self.current_process.poll() is None:
             console.print(
@@ -170,7 +170,7 @@ class CommandExecutor(ExecutorInterface):
             )
             self._terminate_command()
 
-    def _terminate_command(self):
+    def _terminate_command(self) -> None:
         """Terminate the current command."""
         if self.current_process:
             try:
@@ -185,7 +185,7 @@ class CommandExecutor(ExecutorInterface):
             except (OSError, ProcessLookupError):
                 pass
 
-    def _esc_listener(self):
+    def _esc_listener(self) -> None:
         """Listen for ESC key to cancel command."""
         try:
             import termios
@@ -194,7 +194,7 @@ class CommandExecutor(ExecutorInterface):
             old_settings = termios.tcgetattr(sys.stdin)
 
             try:
-                tty.cbreak(sys.stdin.fileno())
+                tty.setcbreak(sys.stdin.fileno())
 
                 while self.current_process and self.current_process.poll() is None:
                     if sys.stdin in select.select([sys.stdin], [], [], 0.1)[0]:
@@ -211,7 +211,7 @@ class CommandExecutor(ExecutorInterface):
         except OSError:
             pass  # Terminal I/O error
 
-    def update_environment(self, env_vars: Dict[str, str]):
+    def update_environment(self, env_vars: Dict[str, str]) -> None:
         """Update environment variables for future commands."""
         self.env.update(env_vars)
 

@@ -4,15 +4,12 @@ Anthropic provider implementation using direct SDK.
 
 import json
 import logging
-from typing import List, Dict, Any, Iterator, Optional, TYPE_CHECKING
+from typing import List, Dict, Any, Iterator, Optional
 from anthropic import Anthropic
 import anthropic
 
-if TYPE_CHECKING:
-    from ..models import Tool
-
 from ..base import BaseLLMProvider
-from ..models import StreamChunk, ToolCall
+from ..models import StreamChunk, ToolCall, Tool
 from ..exceptions import (
     AuthenticationError,
     RateLimitError,
@@ -33,7 +30,7 @@ class AnthropicProvider(BaseLLMProvider):
         provider_name: The provider name (set to 'anthropic').
     """
 
-    def _initialize_client(self, **kwargs):
+    def _initialize_client(self, **kwargs: Any) -> Anthropic:
         """Initialize Anthropic client."""
         return Anthropic(api_key=self.api_key)
 
@@ -52,8 +49,8 @@ class AnthropicProvider(BaseLLMProvider):
     def stream(
         self,
         messages: List[Dict[str, Any]],
-        tools: Optional[List[Dict]] = None,
-        **kwargs,
+        tools: Optional[List[Tool]] = None,
+        **kwargs: Any,
     ) -> Iterator[StreamChunk]:
         """Stream response with unified tool calling support following Anthropic best practices."""
         try:
@@ -118,7 +115,7 @@ class AnthropicProvider(BaseLLMProvider):
     def _build_request(
         self,
         messages: List[Dict[str, Any]],
-        tools: Optional[List[Dict]] = None,
+        tools: Optional[List[Tool]] = None,
         **kwargs: Any,
     ) -> Dict[str, Any]:
         """Build Anthropic API request."""
@@ -160,7 +157,7 @@ class AnthropicProvider(BaseLLMProvider):
 
         return {"messages": converted_messages, "system": system_message}
 
-    def _convert_tools(self, tools: List["Tool"]) -> List[Dict]:
+    def _convert_tools(self, tools: List[Tool]) -> List[Dict[str, Any]]:
         """Convert Tool objects to Anthropic format."""
         anthropic_tools = []
         for tool in tools:

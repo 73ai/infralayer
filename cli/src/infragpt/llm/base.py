@@ -3,24 +3,23 @@ Abstract base class for LLM providers.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Iterator, Optional, TYPE_CHECKING
-from .models import StreamChunk
-
-if TYPE_CHECKING:
-    from .models import Tool
+from typing import List, Dict, Any, Iterator, Optional
+from .models import StreamChunk, Tool
 
 
 class BaseLLMProvider(ABC):
     """Abstract base class for LLM providers with unified tool calling interface."""
 
-    def __init__(self, api_key: str, model: str, **kwargs):
+    _client: Any
+
+    def __init__(self, api_key: str, model: str, **kwargs: Any):
         self.api_key = api_key
         self.model = model
         self.provider_name = self.__class__.__name__.replace("Provider", "").lower()
         self._client = self._initialize_client(**kwargs)
 
     @abstractmethod
-    def _initialize_client(self, **kwargs):
+    def _initialize_client(self, **kwargs: Any) -> Any:
         """Initialize provider-specific client."""
         pass
 
@@ -28,8 +27,8 @@ class BaseLLMProvider(ABC):
     def stream(
         self,
         messages: List[Dict[str, Any]],
-        tools: Optional[List[Dict]] = None,
-        **kwargs,
+        tools: Optional[List[Tool]] = None,
+        **kwargs: Any,
     ) -> Iterator[StreamChunk]:
         """Stream response with unified tool calling support."""
         pass
@@ -40,12 +39,12 @@ class BaseLLMProvider(ABC):
         pass
 
     @abstractmethod
-    def _convert_messages(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _convert_messages(self, messages: List[Dict[str, Any]]) -> Any:
         """Convert unified message format to provider-specific format."""
         pass
 
     @abstractmethod
-    def _convert_tools(self, tools: List["Tool"]) -> List[Dict]:
+    def _convert_tools(self, tools: List[Tool]) -> List[Dict[str, Any]]:
         """Convert Tool objects to provider-specific format."""
         pass
 

@@ -2,7 +2,7 @@
 
 import os
 import sys
-from typing import Optional
+from typing import Optional, Tuple
 
 import click
 from rich.panel import Panel
@@ -28,7 +28,7 @@ from infragpt.auth import (
     validate_token_with_api,
     refresh_token_strict,
     fetch_gcp_credentials_strict,
-    fetch_gke_cluster_info_strict,
+    fetch_gke_cluster_info,
     write_gcp_credentials_file,
     cleanup_credentials,
 )
@@ -36,7 +36,6 @@ from infragpt.exceptions import (
     AuthValidationError,
     TokenRefreshError,
     GCPCredentialError,
-    GKEClusterError,
     ContainerSetupError,
 )
 
@@ -95,21 +94,9 @@ def auth():
 
 
 @auth.command(name="login")
-@click.option(
-    "--api-url",
-    "-a",
-    default=None,
-    help="API base URL (default: https://api.infragpt.io)",
-)
-@click.option(
-    "--console-url",
-    "-c",
-    default=None,
-    help="Console base URL for verification (default: https://app.infragpt.io)",
-)
-def auth_login_cli(api_url, console_url):
+def auth_login_cli():
     """Authenticate with InfraGPT platform."""
-    auth_login(api_base_url=api_url, console_base_url=console_url)
+    auth_login()
 
 
 @auth.command(name="logout")
@@ -134,8 +121,6 @@ def auth_status_cli():
         console.print(f"Organization ID: [cyan]{status.organization_id}[/cyan]")
     if status.user_id:
         console.print(f"User ID: [cyan]{status.user_id}[/cyan]")
-    if status.api_base_url:
-        console.print(f"API: [dim]{status.api_base_url}[/dim]")
     if status.expires_at:
         console.print(f"Token expires: [dim]{status.expires_at}[/dim]")
 
@@ -144,7 +129,7 @@ def get_credentials_v2(
     model_string: Optional[str] = None,
     api_key: Optional[str] = None,
     verbose: bool = False,
-):
+) -> Tuple[str, str]:
     """Get credentials for the new system."""
     if model_string:
         if not LLMRouter.validate_model_string(model_string):
@@ -200,7 +185,7 @@ def get_credentials_v2(
     return model_string, api_key
 
 
-def main(model, api_key, verbose):
+def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
     """InfraGPT V2 - Interactive shell operations with direct SDK integration."""
     init_config()
 
@@ -220,16 +205,24 @@ def main(model, api_key, verbose):
         sandbox = is_sandbox_mode()
         gke_cluster = None
 
+        if sandbox and not authenticated:
+            console.print("[yellow]Sandbox mode requires authentication.[/yellow]")
+            console.print("\nRun [cyan]infragpt auth login[/cyan] to authenticate.")
+            sys.exit(1)
+
         if authenticated and sandbox:
             # STRICT MODE - all failures exit CLI
             validate_token_with_api()
             refresh_token_strict()
             gcp_creds = fetch_gcp_credentials_strict()
-            gke_cluster = fetch_gke_cluster_info_strict()
+            gke_cluster = fetch_gke_cluster_info()
             gcp_creds_path = write_gcp_credentials_file(gcp_creds)
             if verbose:
                 console.print("[dim]GCP credentials loaded.[/dim]")
-                console.print(f"[dim]GKE cluster: {gke_cluster.cluster_name}[/dim]")
+                if gke_cluster:
+                    console.print(f"[dim]GKE cluster: {gke_cluster.cluster_name}[/dim]")
+                else:
+                    console.print("[dim]GKE cluster: auto-discover[/dim]")
 
         if sandbox:
             removed = cleanup_old_containers()
@@ -264,7 +257,7 @@ def main(model, api_key, verbose):
         console.print(f"[red]Authentication Error: {e}[/red]")
         console.print("\nRun [cyan]infragpt auth login[/cyan] to re-authenticate.")
         sys.exit(1)
-    except (GCPCredentialError, GKEClusterError) as e:
+    except GCPCredentialError as e:
         console.print(f"[red]Credential Error: {e}[/red]")
         sys.exit(1)
     except (DockerNotAvailableError, ContainerSetupError) as e:

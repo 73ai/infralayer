@@ -1,6 +1,7 @@
 import os
 import yaml
 import pathlib
+from typing import Any, Dict
 
 from rich.console import Console
 
@@ -17,7 +18,23 @@ CONFIG_DIR = pathlib.Path.home() / ".config" / "infragpt"
 CONFIG_FILE = CONFIG_DIR / "config.yaml"
 
 
-def load_config():
+def is_dev_mode() -> bool:
+    return os.environ.get("INFRAGPT_DEV_MODE", "").lower() == "true"
+
+
+def get_api_base_url() -> str:
+    if is_dev_mode():
+        return "http://localhost:8080"
+    return "https://api.infragpt.io"
+
+
+def get_console_base_url() -> str:
+    if is_dev_mode():
+        return "http://localhost:5173"
+    return "https://app.infragpt.io"
+
+
+def load_config() -> Dict[str, Any]:
     """Load configuration from config file."""
     if not CONFIG_FILE.exists():
         return {}
@@ -30,7 +47,7 @@ def load_config():
         return {}
 
 
-def save_config(config):
+def save_config(config: Dict[str, Any]) -> None:
     """Save configuration to config file."""
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -41,7 +58,7 @@ def save_config(config):
         console.print(f"[yellow]Warning:[/yellow] Could not save config: {e}")
 
 
-def init_config():
+def init_config() -> None:
     """Initialize configuration file with environment variables if it doesn't exist."""
     if CONFIG_FILE.exists():
         return
@@ -52,24 +69,17 @@ def init_config():
 
     init_history_dir()
 
-    config = {}
-
-    from infragpt.llm import validate_env_api_keys
+    config: Dict[str, Any] = {}
 
     openai_key = os.getenv("OPENAI_API_KEY")
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
     env_model = os.getenv("INFRAGPT_MODEL")
 
-    model, api_key = validate_env_api_keys()
-
-    if model and api_key:
-        config["model"] = model
-        config["api_key"] = api_key
-    elif anthropic_key and (not env_model or env_model == "claude"):
-        config["model"] = "claude"
+    if anthropic_key and (not env_model or env_model == "claude"):
+        config["model"] = "anthropic:claude-sonnet-4-20250514"
         config["api_key"] = anthropic_key
     elif openai_key and (not env_model or env_model == "gpt4o"):
-        config["model"] = "gpt4o"
+        config["model"] = "openai:gpt-4o"
         config["api_key"] = openai_key
 
     if config:

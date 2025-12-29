@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
+
 import httpx
+
+from infragpt.config import get_api_base_url
 
 
 @dataclass
@@ -52,8 +55,8 @@ class InfraGPTAPIError(Exception):
 
 
 class InfraGPTClient:
-    def __init__(self, api_base_url: str, timeout: float = 30.0):
-        self.api_base_url = api_base_url.rstrip("/")
+    def __init__(self, timeout: float = 30.0):
+        self.api_base_url = get_api_base_url()
         self.timeout = timeout
 
     def _make_request(

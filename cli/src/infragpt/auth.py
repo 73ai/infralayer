@@ -9,7 +9,7 @@ from typing import Optional
 import httpx
 from cryptography.fernet import InvalidToken
 
-from infragpt.config import CONFIG_DIR, console
+from infragpt.config import CONFIG_DIR, console, get_console_base_url
 from infragpt.encryption import (
     encrypt_data,
     decrypt_data,
@@ -35,20 +35,6 @@ GCP_CREDENTIALS_FILE = CONFIG_DIR / "gcp_credentials.json"
 TOKEN_REFRESH_THRESHOLD_HOURS = 1
 
 
-def _get_api_base_url(api_base_url: Optional[str]) -> str:
-    DEFAULT = "https://api.infragpt.io"
-    if api_base_url:
-        return api_base_url.rstrip("/")
-    return DEFAULT
-
-
-def _get_console_base_url(console_base_url: Optional[str]) -> str:
-    DEFAULT = "https://app.infragpt.io"
-    if console_base_url:
-        return console_base_url.rstrip("/")
-    return DEFAULT
-
-
 @dataclass
 class AuthStatus:
     authenticated: bool
@@ -57,7 +43,6 @@ class AuthStatus:
     access_token: Optional[str] = None
     refresh_token: Optional[str] = None
     expires_at: Optional[str] = None
-    api_base_url: Optional[str] = None
 
 
 def _load_auth_data() -> Optional[dict]:
@@ -108,7 +93,6 @@ def get_auth_status() -> AuthStatus:
         access_token=data.get("access_token"),
         refresh_token=data.get("refresh_token"),
         expires_at=data.get("expires_at"),
-        api_base_url=data.get("api_base_url"),
     )
 
 
@@ -150,8 +134,7 @@ def refresh_token_if_needed() -> bool:
         return True
 
     try:
-        api_base_url = data.get("api_base_url")
-        client = InfraGPTClient(api_base_url=api_base_url)
+        client = InfraGPTClient()
         result = client.refresh_token(refresh_token)
 
         from datetime import timedelta
@@ -171,12 +154,9 @@ def refresh_token_if_needed() -> bool:
         return False
 
 
-def login(
-    api_base_url: Optional[str] = None, console_base_url: Optional[str] = None
-) -> None:
+def login() -> None:
     """Authenticate with InfraGPT platform using device flow."""
-    api_url = _get_api_base_url(api_base_url)
-    client = InfraGPTClient(api_base_url=api_url)
+    client = InfraGPTClient()
 
     console.print("\n[bold]Authenticating with InfraGPT...[/bold]\n")
 
@@ -190,7 +170,7 @@ def login(
     if flow.verification_url.startswith("http"):
         verification_url = flow.verification_url
     else:
-        console_url = _get_console_base_url(console_base_url)
+        console_url = get_console_base_url()
         path = flow.verification_url.lstrip("/")
         verification_url = f"{console_url}/{path}"
 
@@ -238,7 +218,6 @@ def login(
                 "organization_id": result.organization_id,
                 "user_id": result.user_id,
                 "expires_at": expires_at.isoformat(),
-                "api_base_url": api_base_url or InfraGPTClient.DEFAULT_SERVER_URL,
             }
             _save_auth_data(auth_data)
 
@@ -264,8 +243,7 @@ def logout() -> None:
 
     if data and data.get("access_token"):
         try:
-            api_base_url = data.get("api_base_url")
-            client = InfraGPTClient(api_base_url=api_base_url)
+            client = InfraGPTClient()
             client.revoke_token(data["access_token"])
         except (InfraGPTAPIError, httpx.RequestError):
             pass  # Token may already be invalid; don't fail logout
@@ -285,7 +263,7 @@ def fetch_gcp_credentials() -> Optional[GCPCredentials]:
         return None
 
     try:
-        client = InfraGPTClient(api_base_url=status.api_base_url)
+        client = InfraGPTClient()
         return client.get_gcp_credentials(status.access_token)
     except InfraGPTAPIError:
         return None
@@ -298,7 +276,7 @@ def fetch_gke_cluster_info() -> Optional[GKEClusterInfo]:
         return None
 
     try:
-        client = InfraGPTClient(api_base_url=status.api_base_url)
+        client = InfraGPTClient()
         return client.get_gke_cluster_info(status.access_token)
     except InfraGPTAPIError:
         return None
@@ -326,7 +304,7 @@ def validate_token_with_api() -> None:
         raise AuthValidationError("Not authenticated")
 
     try:
-        client = InfraGPTClient(api_base_url=status.api_base_url)
+        client = InfraGPTClient()
         client.validate_token(status.access_token)
     except InfraGPTAPIError as e:
         if e.status_code == 401:
@@ -365,8 +343,7 @@ def refresh_token_strict() -> None:
         return
 
     try:
-        api_base_url = data.get("api_base_url")
-        client = InfraGPTClient(api_base_url=api_base_url)
+        client = InfraGPTClient()
         result = client.refresh_token(refresh_token)
 
         from datetime import timedelta
@@ -394,7 +371,7 @@ def fetch_gcp_credentials_strict() -> GCPCredentials:
         raise GCPCredentialError("Not authenticated")
 
     try:
-        client = InfraGPTClient(api_base_url=status.api_base_url)
+        client = InfraGPTClient()
         return client.get_gcp_credentials(status.access_token)
     except InfraGPTAPIError as e:
         if e.status_code == 404:
@@ -413,7 +390,7 @@ def fetch_gke_cluster_info_strict() -> GKEClusterInfo:
         raise GKEClusterError("Not authenticated")
 
     try:
-        client = InfraGPTClient(api_base_url=status.api_base_url)
+        client = InfraGPTClient()
         return client.get_gke_cluster_info(status.access_token)
     except InfraGPTAPIError as e:
         if e.status_code == 404:

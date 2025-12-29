@@ -119,7 +119,7 @@ class MainAgent(BaseAgent):
             tools_used=[],
         )
 
-    def set_llm_client(self, llm_client: object) -> None:
+    def set_llm_client(self, llm_client: LiteLLMClient) -> None:
         """Set LLM client for all agents."""
         super().set_llm_client(llm_client)
 

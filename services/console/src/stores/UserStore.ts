@@ -38,12 +38,7 @@ class UserStore {
   }
 
   get hasCompletedOnboarding(): boolean {
-    return Boolean(
-      this.userProfile?.metadata?.company_size &&
-        this.userProfile?.metadata?.team_size &&
-        this.userProfile?.metadata?.use_cases?.length > 0 &&
-        this.userProfile?.metadata?.observability_stack?.length > 0,
-    );
+    return Boolean(this.userProfile?.metadata?.completed_at);
   }
 
   async loadUserProfile(

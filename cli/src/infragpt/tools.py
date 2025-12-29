@@ -3,7 +3,7 @@ Tool system for LLM function calling.
 """
 
 import inspect
-from typing import Callable, Dict, Any, Optional, List
+from typing import Callable, Dict, Any, Optional, List, Union, get_origin, get_args
 from functools import wraps
 from rich.console import Console
 from .shell import CommandExecutor
@@ -13,6 +13,10 @@ from .container import (
     get_executor as get_container_executor,
 )
 from .llm.models import Tool, InputSchema, Parameter
+
+
+# Registry for tool definitions
+_tool_registry: Dict[str, Tool] = {}
 
 
 class ToolExecutionCancelled(Exception):
@@ -51,16 +55,44 @@ def cleanup_executor() -> None:
         _host_executor = None
 
 
-def tool(name: Optional[str] = None, description: Optional[str] = None):
-    """Decorator to convert a function into a tool definition."""
+def _get_type_name(annotation: Any) -> str:
+    """Convert Python type annotation to JSON schema type name."""
+    if annotation is str:
+        return "string"
+    elif annotation is int:
+        return "integer"
+    elif annotation is float:
+        return "number"
+    elif annotation is bool:
+        return "boolean"
+    return "string"
 
-    def decorator(func: Callable) -> Callable:
+
+def _is_optional_type(annotation: Any) -> tuple[bool, Any]:
+    """Check if annotation is Optional[T] and return (is_optional, inner_type)."""
+    origin = get_origin(annotation)
+    if origin is Union:
+        args = get_args(annotation)
+        non_none_args = [a for a in args if a is not type(None)]
+        if len(non_none_args) == 1 and type(None) in args:
+            return True, non_none_args[0]
+    return False, annotation
+
+
+def tool(
+    name: Optional[str] = None, description: Optional[str] = None
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    """
+    Decorator to convert a function into a tool definition.
+    """
+
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         sig = inspect.signature(func)
         tool_name = name or func.__name__
         tool_description = description or func.__doc__ or f"Execute {tool_name}"
 
-        properties = {}
-        required = []
+        properties: Dict[str, Parameter] = {}
+        required: List[str] = []
 
         for param_name, param in sig.parameters.items():
             param_type = "string"
@@ -70,31 +102,12 @@ def tool(name: Optional[str] = None, description: Optional[str] = None):
             )
 
             if param.annotation != inspect.Parameter.empty:
-                if param.annotation is str:
-                    param_type = "string"
-                elif param.annotation is int:
-                    param_type = "integer"
-                elif param.annotation is float:
-                    param_type = "number"
-                elif param.annotation is bool:
-                    param_type = "boolean"
-
-                if (
-                    hasattr(param.annotation, "__args__")
-                    and type(None) in param.annotation.__args__
-                ):
-                    actual_type = next(
-                        t for t in param.annotation.__args__ if t is not type(None)
-                    )
-                    if actual_type is str:
-                        param_type = "string"
-                    elif actual_type is int:
-                        param_type = "integer"
-                    elif actual_type is float:
-                        param_type = "number"
-                    elif actual_type is bool:
-                        param_type = "boolean"
+                is_optional, inner_type = _is_optional_type(param.annotation)
+                if is_optional:
+                    param_type = _get_type_name(inner_type)
                     param_description = f"Optional parameter {param_name}"
+                else:
+                    param_type = _get_type_name(param.annotation)
 
             properties[param_name] = Parameter(
                 type=param_type, description=param_description, default=param_default
@@ -114,10 +127,11 @@ def tool(name: Optional[str] = None, description: Optional[str] = None):
             name=tool_name, description=tool_description, input_schema=input_schema
         )
 
-        func._tool = tool_obj
+        # Store in registry instead of function attribute
+        _tool_registry[tool_name] = tool_obj
 
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             return func(*args, **kwargs)
 
         return wrapper
@@ -184,16 +198,12 @@ def execute_shell_command(command: str, description: Optional[str] = None) -> st
 
 def get_available_tools() -> List[Tool]:
     """Get list of available Tool objects."""
-    return [execute_shell_command._tool]
+    return list(_tool_registry.values())
 
 
 def get_tool_by_name(tool_name: str) -> Optional[Tool]:
     """Get a tool definition by name."""
-    tools = get_available_tools()
-    for tool in tools:
-        if tool.name == tool_name:
-            return tool
-    return None
+    return _tool_registry.get(tool_name)
 
 
 def execute_tool_call(tool_name: str, arguments: Dict[str, Any]) -> str:

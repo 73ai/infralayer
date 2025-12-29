@@ -50,11 +50,11 @@ class ConversationContext:
         self,
         role: str,
         content: str,
-        tool_calls: Optional[List[Dict]] = None,
+        tool_calls: Optional[List[Dict[str, Any]]] = None,
         tool_call_id: Optional[str] = None,
-    ):
+    ) -> None:
         """Add a message to the conversation context."""
-        message_dict = {"role": role, "content": content}
+        message_dict: Dict[str, Any] = {"role": role, "content": content}
 
         if tool_calls:
             message_dict["tool_calls"] = tool_calls

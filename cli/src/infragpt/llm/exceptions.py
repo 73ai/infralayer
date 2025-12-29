@@ -2,11 +2,18 @@
 Unified exception hierarchy for LLM providers.
 """
 
+from typing import Optional
+
 
 class LLMError(Exception):
     """Base exception for all LLM-related errors."""
 
-    def __init__(self, message: str, provider: str = None, model: str = None):
+    def __init__(
+        self,
+        message: str,
+        provider: Optional[str] = None,
+        model: Optional[str] = None,
+    ):
         self.provider = provider
         self.model = model
         super().__init__(message)
@@ -30,9 +37,9 @@ class APIError(LLMError):
     def __init__(
         self,
         message: str,
-        status_code: int = None,
-        provider: str = None,
-        model: str = None,
+        status_code: Optional[int] = None,
+        provider: Optional[str] = None,
+        model: Optional[str] = None,
     ):
         self.status_code = status_code
         super().__init__(message, provider, model)

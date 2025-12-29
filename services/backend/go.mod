@@ -6,7 +6,7 @@ replace github.com/73ai/infragpt/services/agent/src/client/go => ../agent/src/cl
 
 require (
 	github.com/73ai/infragpt/services/agent/src/client/go v0.0.0-00010101000000-000000000000
-	github.com/clerk/clerk-sdk-go/v2 v2.3.1
+	github.com/clerk/clerk-sdk-go/v2 v2.5.0
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
@@ -15,7 +15,7 @@ require (
 	github.com/slack-go/slack v0.16.0
 	github.com/sqlc-dev/pqtype v0.3.0
 	github.com/svix/svix-webhooks v1.67.0
-	golang.org/x/sync v0.18.0
+	golang.org/x/sync v0.19.0
 	google.golang.org/api v0.217.0
 	google.golang.org/grpc v1.77.0
 	google.golang.org/protobuf v1.36.11
@@ -39,10 +39,10 @@ require (
 	go.opentelemetry.io/otel v1.38.0 // indirect
 	go.opentelemetry.io/otel/metric v1.38.0 // indirect
 	go.opentelemetry.io/otel/trace v1.38.0 // indirect
-	golang.org/x/crypto v0.45.0 // indirect
+	golang.org/x/crypto v0.46.0 // indirect
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/oauth2 v0.32.0 // indirect
-	golang.org/x/sys v0.38.0 // indirect
-	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/text v0.32.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251022142026-3a174f9686a8 // indirect
 )

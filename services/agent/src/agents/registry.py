@@ -1,7 +1,7 @@
 """Agent registry and factory for managing agent instances."""
 
 import logging
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from src.agents.main_agent import MainAgent
 from src.models.agent import AgentRequest, AgentResponse
@@ -86,7 +86,7 @@ class AgentSystem:
             metadata={"context": request.context},
         )
 
-    def set_llm_client(self, llm_client: object) -> None:
+    def set_llm_client(self, llm_client: LiteLLMClient) -> None:
         """Set LLM client for the agent system."""
         if self.main_agent:
             self.main_agent.set_llm_client(llm_client)
@@ -98,7 +98,7 @@ class AgentSystem:
         """Check if the agent system is ready to process requests."""
         return self._initialized and self.main_agent is not None
 
-    def get_system_status(self) -> dict:
+    def get_system_status(self) -> Dict[str, Any]:
         """Get status of the entire agent system."""
         if not self._initialized:
             return {"status": "not_initialized"}

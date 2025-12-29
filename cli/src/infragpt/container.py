@@ -15,6 +15,9 @@ from pathlib import Path
 from typing import Tuple, Dict, Optional
 
 import docker
+from docker import DockerClient
+from docker.errors import DockerException, APIError as DockerAPIError
+from docker.models.containers import Container
 from rich.console import Console
 
 from infragpt.api_client import GKEClusterInfo
@@ -80,7 +83,7 @@ def ensure_docker_available() -> None:
         client = docker.from_env()
         client.ping()
         client.close()
-    except docker.errors.DockerException as e:
+    except DockerException as e:
         raise DockerNotAvailableError(f"Docker error: {e}")
 
 
@@ -90,7 +93,7 @@ _executor: Optional["ContainerRunner"] = None
 
 def cleanup_old_containers() -> int:
     """Remove any existing sandbox containers from previous CLI sessions."""
-    client = None
+    client: Optional[DockerClient] = None
     try:
         client = docker.from_env()
         image_prefix = "ghcr.io/73ai/infragpt-sandbox:"
@@ -104,15 +107,15 @@ def cleanup_old_containers() -> int:
             if is_sandbox:
                 try:
                     container.stop(timeout=CONTAINER_STOP_TIMEOUT)
-                except docker.errors.APIError:
+                except DockerAPIError:
                     pass
                 try:
                     container.remove(force=True)
-                except docker.errors.APIError:
+                except DockerAPIError:
                     pass
                 removed += 1
         return removed
-    except docker.errors.DockerException:
+    except DockerException:
         return 0
     finally:
         if client is not None:
@@ -143,6 +146,9 @@ def cleanup_executor() -> None:
 
 class ContainerRunner(ExecutorInterface):
     """Docker container executor with streaming support."""
+
+    client: Optional[DockerClient]
+    container: Optional[Container]
 
     def __init__(
         self,
@@ -187,7 +193,7 @@ class ContainerRunner(ExecutorInterface):
 
         try:
             self.client.images.pull(self.image)
-        except docker.errors.APIError as e:
+        except DockerAPIError as e:
             if not self.client.images.list(name=self.image):
                 raise DockerNotAvailableError(
                     f"Failed to pull sandbox image: {e}\nRun: docker pull {self.image}"
@@ -236,7 +242,7 @@ class ContainerRunner(ExecutorInterface):
         Returns:
             Tuple of (exit_code, output, was_cancelled)
         """
-        if self.container is None:
+        if self.container is None or self.client is None:
             raise DockerNotAvailableError("Container not started. Call start() first.")
 
         self.cancelled = False
@@ -277,7 +283,7 @@ class ContainerRunner(ExecutorInterface):
                             cmd=["/bin/sh", "-c", "pkill -P 1"],
                         )
                     )
-                except docker.errors.APIError:
+                except DockerAPIError:
                     pass
 
             exec_info = self.client.api.exec_inspect(exec_id)
@@ -288,7 +294,7 @@ class ContainerRunner(ExecutorInterface):
 
             return exit_code, output, self.cancelled
 
-        except docker.errors.APIError as e:
+        except DockerAPIError as e:
             console.print(f"[bold red]Error executing command:[/bold red] {e}")
             return -1, str(e), False
 
@@ -306,7 +312,7 @@ class ContainerRunner(ExecutorInterface):
 
     def _exec_in_container(self, command: str) -> tuple[int, str, str]:
         """Execute a command in container and return (exit_code, stdout, stderr)."""
-        if self.container is None:
+        if self.container is None or self.client is None:
             raise RuntimeError("Container not running")
 
         exec_id = self.client.api.exec_create(
@@ -397,10 +403,10 @@ class ContainerRunner(ExecutorInterface):
             try:
                 console.print("[dim]Stopping sandbox container...[/dim]")
                 self.container.stop(timeout=CONTAINER_STOP_TIMEOUT)
-            except docker.errors.APIError:
+            except DockerAPIError:
                 try:
                     self.container.kill()
-                except docker.errors.APIError:
+                except DockerAPIError:
                     pass
             self.container = None
 
