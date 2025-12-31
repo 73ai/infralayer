@@ -50,10 +50,11 @@ from infralayer.exceptions import (
 )
 @click.option("--api-key", "-k", help="API key for the selected provider")
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
-def cli(ctx, model, api_key, verbose):
+@click.option("--yolo", is_flag=True, help="Skip permission prompts for tool execution")
+def cli(ctx, model, api_key, verbose, yolo):
     """InfraLayer V2 - Interactive shell operations with direct SDK integration."""
     if ctx.invoked_subcommand is None:
-        main(model=model, api_key=api_key, verbose=verbose)
+        main(model=model, api_key=api_key, verbose=verbose, yolo=yolo)
 
 
 @cli.command(name="history")
@@ -185,9 +186,26 @@ def get_credentials_v2(
     return model_string, api_key
 
 
-def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
+def main(
+    model: Optional[str], api_key: Optional[str], verbose: bool, yolo: bool = False
+) -> None:
     """InfraLayer V2 - Interactive shell operations with direct SDK integration."""
+    from infralayer.config import set_yolo_mode, is_yolo_mode
+
     init_config()
+
+    if yolo:
+        set_yolo_mode(True)
+
+    if is_yolo_mode():
+        console.print(
+            Panel.fit(
+                "[bold red]YOLO MODE ACTIVE[/bold red]\n"
+                "[yellow]Permission prompts will be skipped.[/yellow]",
+                border_style="red",
+                title="[bold yellow]Warning[/bold yellow]",
+            )
+        )
 
     if verbose:
         from importlib.metadata import version

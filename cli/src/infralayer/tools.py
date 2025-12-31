@@ -12,6 +12,7 @@ from .container import (
     is_sandbox_mode,
     get_executor as get_container_executor,
 )
+from .config import is_yolo_mode
 from .llm.models import Tool, InputSchema, Parameter
 
 
@@ -53,6 +54,26 @@ def cleanup_executor() -> None:
     elif _host_executor is not None:
         _host_executor.cleanup()
         _host_executor = None
+
+
+def require_permission(action_description: str) -> None:
+    """Request user permission. Skips if yolo mode enabled."""
+    if is_yolo_mode():
+        console.print("\n[dim](yolo mode - auto-approved)[/dim]")
+        return
+
+    console.print(f"\n[yellow]{action_description}? (Y/n):[/yellow] ", end="")
+    console.file.flush()
+
+    try:
+        user_input = input().strip().lower()
+    except (KeyboardInterrupt, EOFError):
+        console.print("\n[yellow]Operation cancelled.[/yellow]")
+        raise ToolExecutionCancelled("User cancelled operation")
+
+    if user_input not in ["y", "yes", ""]:
+        console.print("\n[yellow]Operation cancelled.[/yellow]")
+        raise ToolExecutionCancelled("User cancelled operation")
 
 
 def _get_type_name(annotation: Any) -> str:
@@ -159,18 +180,7 @@ def execute_shell_command(command: str, description: Optional[str] = None) -> st
     if description:
         console.print(f"[dim]Description:[/dim] {description}")
 
-    console.print("\n[yellow]Execute this command? (Y/n):[/yellow] ", end="")
-    console.file.flush()
-
-    try:
-        user_input = input().strip().lower()
-    except (KeyboardInterrupt, EOFError):
-        console.print("\n[yellow]Command execution cancelled.[/yellow]")
-        raise ToolExecutionCancelled("User cancelled command execution")
-
-    if user_input not in ["y", "yes", ""]:
-        console.print("\n[yellow]Command execution cancelled.[/yellow]")
-        raise ToolExecutionCancelled("User cancelled command execution")
+    require_permission("Execute this command")
 
     try:
         executor = get_executor()
