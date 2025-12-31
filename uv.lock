@@ -5,7 +5,7 @@ requires-python = ">=3.13"
 members = [
     "backend-agent",
     "backendapi",
-    "infralayer",
+    "infragpt",
 ]
 
 [[package]]
@@ -679,7 +679,7 @@ wheels = [
 ]
 
 [[package]]
-name = "infralayer"
+name = "infragpt"
 version = "0.1.53"
 source = { editable = "cli" }
 dependencies = [
