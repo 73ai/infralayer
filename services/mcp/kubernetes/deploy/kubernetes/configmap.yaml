@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-server-config
+  namespace: infragpt
+data:
+  config.yaml: |
+    api:
+      addr: ":8081"
+      
+    metrics:
+      addr: ":8080"
+      
+    auth:
+      jwtSecret: "${JWT_SECRET}"
+      tokenExpiration: "24h"
+      apiKeys:
+        admin: "${API_KEY}"
+
+    kubernetes:
+      inCluster: true
+      
+    controller:
+      enableLeaderElection: true
+      leaderElectionID: "mcp-controller-lock"
+      
+    logging:
+      level: "info"
+      format: "json"

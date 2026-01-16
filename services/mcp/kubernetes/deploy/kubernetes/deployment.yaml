@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-server
+  namespace: infragpt
+  labels:
+    app: mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-server
+  template:
+    metadata:
+      labels:
+        app: mcp-server
+    spec:
+      serviceAccountName: mcp-server
+      containers:
+      - name: mcp-server
+        image: infragpt/mcp-server:latest
+        imagePullPolicy: Always
+        args:
+        - "--metrics-addr=:8080"
+        - "--api-addr=:8081"
+        - "--enable-leader-election=true"
+        ports:
+        - name: metrics
+          containerPort: 8080
+        - name: api
+          containerPort: 8081
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: api
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: api
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        volumeMounts:
+        - name: config
+          mountPath: /app/config
+      volumes:
+      - name: config
+        configMap:
+          name: mcp-server-config
