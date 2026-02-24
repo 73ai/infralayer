@@ -22,8 +22,8 @@ const resolvedImageWithDomain = new URL(
 const { title, lang: _lang = null } = Astro.props;
 
 const makeTitle = title
-  ? `${title} | InfraGPT`
-  : "InfraGPT - Composable, OpenSource AI DevOps Copilot";
+  ? `${title} | InfraLayer`
+  : "InfraLayer - Composable, OpenSource AI DevOps Copilot";
 ---
 
 <!doctype html>
@@ -41,17 +41,17 @@ const makeTitle = title
 
     <SEO
       title={makeTitle}
-      description="InfraGPT automates infrastructure monitoring, cost optimization, and cloud troubleshooting so your team can focus on shipping great software."
+      description="InfraLayer automates infrastructure monitoring, cost optimization, and cloud troubleshooting so your team can focus on shipping great software."
       canonical={canonicalURL}
       openGraph={{
         basic: {
           url: canonicalURL,
           type: "website",
-          title: `InfraGPT - Composable, OpenSource AI DevOps Copilot`,
+          title: `InfraLayer - Composable, OpenSource AI DevOps Copilot`,
           image: resolvedImageWithDomain,
         },
         image: {
-          alt: "InfraGPT Homepage Screenshot",
+          alt: "InfraLayer Homepage Screenshot",
         },
       }}
     />
@@ -59,6 +59,25 @@ const makeTitle = title
     <script src="/src/pwa.ts"></script>
   </head>
   <body>
+    <div
+      x-data="{ show: !sessionStorage.getItem('rebrand-dismissed') }"
+      x-show="show"
+      x-transition
+      class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center text-sm py-2.5 px-4 relative"
+    >
+      <span>
+        <strong>InfraGPT is now InfraLayer</strong> — same mission, new name.
+      </span>
+      <button
+        @click="show = false; sessionStorage.setItem('rebrand-dismissed', 'true')"
+        class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white"
+        aria-label="Dismiss"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
     <Navbar />
     <slot />
     <Footer />

@@ -1,10 +1,10 @@
 # Website Service
 
-The public-facing marketing website for the InfraGPT platform built with modern web technologies.
+The public-facing marketing website for the InfraLayer platform built with modern web technologies.
 
 ## Service Purpose
 
-This is the InfraGPT marketing website built with Astro 5, a modern static site generator. The site serves as the primary public interface for the InfraGPT platform, showcasing the AI SRE copilot capabilities and providing information about cloud infrastructure management solutions. The website includes marketing content, blog posts, and serves as the entry point for potential users to learn about and engage with the InfraGPT platform.
+This is the InfraLayer marketing website built with Astro 5, a modern static site generator. The site serves as the primary public interface for the InfraLayer platform, showcasing the AI SRE copilot capabilities and providing information about cloud infrastructure management solutions. The website includes marketing content, blog posts, and serves as the entry point for potential users to learn about and engage with the InfraLayer platform.
 
 ## Development Commands
 
@@ -89,7 +89,7 @@ tags: string[]
 
 ## Build Configuration
 
-- **Site URL**: https://infragpt.io
+- **Site URL**: https://infralayer.dev
 - **Output**: Static site generation
 - **PWA**: Configured with auto-update registration
 - **Markdown**: Enhanced with slug generation and autolinked headings
@@ -103,8 +103,8 @@ tags: string[]
   - Targeted updates more effective than removing package-lock.json for security patches
 
 ### GitHub Actions CI/CD Pipeline
-- **Automated Deployment**: Configured GitHub Actions for Netlify deployment
-- **Build Process**: Astro build → Netlify deployment on main branch pushes
+- **Automated Deployment**: Configured GitHub Actions for Cloudflare Pages deployment
+- **Build Process**: Astro build → Cloudflare Pages deployment on master branch pushes
 - **Dependency Caching**: npm cache optimization for faster CI builds
 
 ### Website Enhancement Features
