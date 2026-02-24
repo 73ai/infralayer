@@ -1,6 +1,6 @@
 # Services Overview
 
-InfraGPT is a multi-service platform providing AI-powered infrastructure management through Slack integration. The system consists of three main services that work together to deliver intelligent DevOps workflows.
+InfraLayer is a multi-service platform providing AI-powered infrastructure management through Slack integration. The system consists of three main services that work together to deliver intelligent DevOps workflows.
 
 ## Core Services
 

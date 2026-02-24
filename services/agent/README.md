@@ -1,4 +1,4 @@
-# InfraGPT Agent Service
+# InfraLayer Agent Service
 
 AI-powered infrastructure management agent providing intelligent processing for DevOps workflows via FastAPI + gRPC.
 

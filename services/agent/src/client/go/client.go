@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"
 
-	pb "github.com/73ai/infragpt/services/agent/src/client/go/proto"
+	pb "github.com/73ai/infralayer/services/agent/src/client/go/proto"
 )
 
 // Message is an alias for the protobuf Message type for convenience

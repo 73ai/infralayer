@@ -243,7 +243,7 @@ export const OnboardingForm = observer(
           <CardHeader>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <CardTitle>Welcome to InfraGPT</CardTitle>
+                <CardTitle>Welcome to InfraLayer</CardTitle>
                 <CardDescription>
                   Let's set up your organization profile to get started
                 </CardDescription>

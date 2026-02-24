@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/73ai/infragpt/services/backend/internal/conversationsvc/domain"
+	"github.com/73ai/infralayer/services/backend/internal/conversationsvc/domain"
 )
 
 func (db *BackendDB) AddChannel(ctx context.Context, teamID, channelID, channelName string) error {

@@ -1,10 +1,10 @@
-![InfraGPT](docs/assets/logo.svg)
+![InfraLayer](docs/assets/logo.svg)
 
-![PyPI](https://img.shields.io/pypi/v/infragpt)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/73ai/infragpt/deploy.yml)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/73ai/infragpt/publish.yml)
+![PyPI](https://img.shields.io/pypi/v/infralayer)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/73ai/infralayer/deploy.yml)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/73ai/infralayer/publish.yml)
 
-InfraGPT is an AI SRE Copilot for the Cloud that provides infrastructure management agents through Slack integration. The system consists of multiple services that work together to deliver intelligent DevOps workflows.
+InfraLayer is an AI SRE Copilot for the Cloud that provides infrastructure management agents through Slack integration. The system consists of multiple services that work together to deliver intelligent DevOps workflows.
 
 
 <img src="docs/assets/slack-chat.png" style="max-width: 500px; height: auto;">
@@ -31,30 +31,30 @@ The services work together in this message flow:
 - **🔐 Enterprise Security**: Authentication, authorization, and audit trails
 
 ## Integrations
-We use a flexible data model so that we can support multiple integrations. Currently, InfraGPT supports Slack, GitHub and Terraform. 
+We use a flexible data model so that we can support multiple integrations. Currently, InfraLayer supports Slack, GitHub and Terraform. 
 We are actively working on adding integrations to the our stack.
 
 ## Platform Architecture
 
 ### 1. 🖥️ CLI Tool (`/cli/`)
 
-Interactive terminal interface for infragpt
+Interactive terminal interface for infralayer
 
 - Natural language queries for infrastructure commands
 - Interactive mode with command history
 - Support for OpenAI GPT-4o and Anthropic Claude models
-- Install with: `pipx install infragpt`
+- Install with: `pipx install infralayer`
 
-![Demo CLI](docs/assets/infragpt.gif)
+![Demo CLI](docs/assets/infralayer.gif)
 
 #### Quick Start
 
 ```bash
 # Install using pipx (recommended)
-pipx install infragpt
+pipx install infralayer
 
 # Launch interactive mode
-infragpt
+infralayer
 
 # Example usage
 > create a new VM instance called test-vm in us-central1 with 2 CPUs
@@ -108,7 +108,7 @@ Main Slack bot and infrastructure management service
 ```
 
 ### 4. Console Service (`/services/console/`)
-Web client interface for InfraGPT platform
+Web client interface for InfraLayer platform
 
 - Modern React with Vite and TypeScript
 - Radix UI components with Tailwind CSS
@@ -116,7 +116,7 @@ Web client interface for InfraGPT platform
 - Real-time integration with platform services
 ## Contributing
 
-For information on how to contribute to InfraGPT, including development setup, release process, and CI/CD configuration, please see the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+For information on how to contribute to InfraLayer, including development setup, release process, and CI/CD configuration, please see the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## License
 

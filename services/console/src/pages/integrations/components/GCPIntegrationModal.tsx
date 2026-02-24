@@ -293,7 +293,7 @@ export const GCPIntegrationModal: React.FC<GCPIntegrationModalProps> = observer(
                   </p>
                   <p className="text-blue-700 mt-1">
                     Your service account credentials will be encrypted using
-                    AES-256-GCM and stored securely. InfraGPT only accesses the
+                    AES-256-GCM and stored securely. InfraLayer only accesses the
                     permissions explicitly granted to the service account.
                   </p>
                 </div>

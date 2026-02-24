@@ -10,7 +10,7 @@ from rich.console import Console
 
 console = Console()
 
-HISTORY_DIR = pathlib.Path.home() / ".config" / "infragpt" / "history"
+HISTORY_DIR = pathlib.Path.home() / ".config" / "infralayer" / "history"
 HISTORY_DB_FILE = HISTORY_DIR / "history.jsonl"
 
 INTERACTION_FIELD_ALLOWLIST = {

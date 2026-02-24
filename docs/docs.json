@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "InfraGPT",
+  "name": "InfraLayer",
   "colors": {
     "primary": "#0023C4",
     "light": "#1E40AF",
@@ -53,12 +53,12 @@
       "anchors": [
         {
           "anchor": "GitHub",
-          "href": "https://github.com/73ai/infragpt",
+          "href": "https://github.com/73ai/infralayer",
           "icon": "github"
         },
         {
           "anchor": "CLI Tool",
-          "href": "https://pypi.org/project/infragpt/",
+          "href": "https://pypi.org/project/infralayer/",
           "icon": "terminal"
         }
       ]
@@ -72,13 +72,13 @@
     "links": [
       {
         "label": "GitHub",
-        "href": "https://github.com/73ai/infragpt"
+        "href": "https://github.com/73ai/infralayer"
       }
     ]
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/73ai/infragpt"
+      "github": "https://github.com/73ai/infralayer"
     }
   }
 }

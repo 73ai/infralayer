@@ -18,8 +18,8 @@ dev:
 build: build-console
 	@echo "Building production binary..."
 	@mkdir -p bin
-	@go build -o bin/infragpt ./services/backend/cmd/main.go
-	@echo "Production binary created at bin/infragpt"
+	@go build -o bin/infralayer ./services/backend/cmd/main.go
+	@echo "Production binary created at bin/infralayer"
 
 # Build console for production
 build-console:
@@ -63,10 +63,10 @@ clean:
 	@rm -rf services/console/node_modules/
 	@rm -rf services/agent/__pycache__/
 	@rm -rf cli/__pycache__/
-	@rm -rf cli/src/infragpt/__pycache__/
-	@rm -rf cli/src/infragpt/**/__pycache__/
+	@rm -rf cli/src/infralayer/__pycache__/
+	@rm -rf cli/src/infralayer/**/__pycache__/
 	@rm -rf cli/.pytest_cache/
-	@rm -rf cli/infragpt.egg-info/
+	@rm -rf cli/infralayer.egg-info/
 	@rm -rf cli/dist/
 	@rm -rf cli/build/
 	@echo "Clean complete."

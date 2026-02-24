@@ -1,4 +1,4 @@
-# InfraGPT Console Service
+# InfraLayer Console Service
 
 React TypeScript console service for AI-powered infrastructure management with Clerk authentication and integration management.
 

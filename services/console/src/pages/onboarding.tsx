@@ -38,7 +38,7 @@ export default function OnboardingPage() {
             <CardHeader className="text-center">
               <CardTitle>Create Your Organization</CardTitle>
               <CardDescription>
-                Let's set up your organization to get started with InfraGPT
+                Let's set up your organization to get started with InfraLayer
               </CardDescription>
             </CardHeader>
             <CardContent>

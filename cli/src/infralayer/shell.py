@@ -1,5 +1,5 @@
 """
-Shell command execution module for InfraGPT CLI agent.
+Shell command execution module for InfraLayer CLI agent.
 
 This module provides functionality for executing shell commands with:
 - Real-time streaming output

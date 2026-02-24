@@ -3,7 +3,7 @@ package devicesvc
 import (
 	"database/sql"
 
-	"github.com/73ai/infragpt/services/backend/internal/devicesvc/supporting/postgres"
+	"github.com/73ai/infralayer/services/backend/internal/devicesvc/supporting/postgres"
 )
 
 type Config struct {

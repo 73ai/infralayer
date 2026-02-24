@@ -6,7 +6,7 @@
 
 ## User Responsibilities
 - Review all generated commands before execution
-- Keep InfraGPT and dependencies updated
+- Keep InfraLayer and dependencies updated
 
 
 ## Safety Features

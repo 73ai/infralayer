@@ -11,11 +11,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/73ai/infragpt/services/backend/internal/generic/httperrors"
+	"github.com/73ai/infralayer/services/backend/internal/generic/httperrors"
 	svix "github.com/svix/svix-webhooks/go"
 
-	"github.com/73ai/infragpt/services/backend"
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc/domain"
+	"github.com/73ai/infralayer/services/backend"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc/domain"
 )
 
 type user struct {

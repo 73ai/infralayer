@@ -3,7 +3,7 @@ syntax = "proto3";
 
 package backend;
 
-option go_package = "github.com/73ai/infragpt/services/backend/backendapi/proto";
+option go_package = "github.com/73ai/infralayer/services/backend/backendapi/proto";
 
 service BackendService {
   rpc SendReply(SendReplyCommand) returns (Status);

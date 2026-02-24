@@ -1,11 +1,11 @@
-module github.com/73ai/infragpt/services/backend
+module github.com/73ai/infralayer/services/backend
 
 go 1.24.0
 
-replace github.com/73ai/infragpt/services/agent/src/client/go => ../agent/src/client/go
+replace github.com/73ai/infralayer/services/agent/src/client/go => ../agent/src/client/go
 
 require (
-	github.com/73ai/infragpt/services/agent/src/client/go v0.0.0-00010101000000-000000000000
+	github.com/73ai/infralayer/services/agent/src/client/go v0.0.0-00010101000000-000000000000
 	github.com/clerk/clerk-sdk-go/v2 v2.5.0
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/uuid v1.6.0

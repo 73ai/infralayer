@@ -24,14 +24,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\x12\x07\x62\x61\x63kend\"<\n\x10SendReplyCommand\x12\x17\n\x0f\x63onversation_id\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\"(\n\x06Status\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t2I\n\x0e\x42\x61\x63kendService\x12\x37\n\tSendReply\x12\x19.backend.SendReplyCommand\x1a\x0f.backend.StatusB<Z:github.com/73ai/infragpt/services/backend/backendapi/protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\x12\x07\x62\x61\x63kend\"<\n\x10SendReplyCommand\x12\x17\n\x0f\x63onversation_id\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\"(\n\x06Status\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t2I\n\x0e\x42\x61\x63kendService\x12\x37\n\tSendReply\x12\x19.backend.SendReplyCommand\x1a\x0f.backend.StatusB<Z:github.com/73ai/infralayer/services/backend/backendapi/protob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'backend_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z:github.com/73ai/infragpt/services/backend/backendapi/proto'
+  _globals['DESCRIPTOR']._serialized_options = b'Z:github.com/73ai/infralayer/services/backend/backendapi/proto'
   _globals['_SENDREPLYCOMMAND']._serialized_start=26
   _globals['_SENDREPLYCOMMAND']._serialized_end=86
   _globals['_STATUS']._serialized_start=88

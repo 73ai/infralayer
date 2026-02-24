@@ -1,10 +1,10 @@
-# InfraGPT Console Service
+# InfraLayer Console Service
 
 Modern React TypeScript console service for AI-powered infrastructure management with comprehensive authentication, onboarding, and integration workflows.
 
 ## Service Overview
 
-The console service serves as the primary user interface for InfraGPT platform, providing:
+The console service serves as the primary user interface for InfraLayer platform, providing:
 - **User Authentication & Authorization**: Clerk-based OAuth integration with organization management
 - **Organization Onboarding**: Multi-step wizard for new organization setup and metadata collection
 - **Integration Management**: Configuration and management of external service integrations (Slack, GitHub, AWS, GCP, Datadog, PagerDuty)
@@ -87,7 +87,7 @@ npm run preview
 ```
 
 ### Development Server Configuration
-- **Host**: Configured to accept connections from `app-local.infragpt.io`
+- **Host**: Configured to accept connections from `app-local.infralayer.dev`
 - **Port**: 5173 (Vite default)
 - **Hot Reload**: Enabled with React Fast Refresh
 - **Build Output**: `../wwwroot/` (shared with Go server)

@@ -1,5 +1,5 @@
 """
-Prompt handling and command processing for InfraGPT CLI.
+Prompt handling and command processing for InfraLayer CLI.
 """
 
 SHELL_AGENT_PROMPT = """You are an intelligent shell operations assistant. You help users with:

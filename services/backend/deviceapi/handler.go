@@ -7,10 +7,10 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/73ai/infragpt/services/backend"
-	"github.com/73ai/infragpt/services/backend/internal/devicesvc"
-	"github.com/73ai/infragpt/services/backend/internal/devicesvc/domain"
-	"github.com/73ai/infragpt/services/backend/internal/generic/httperrors"
+	"github.com/73ai/infralayer/services/backend"
+	"github.com/73ai/infralayer/services/backend/internal/devicesvc"
+	"github.com/73ai/infralayer/services/backend/internal/devicesvc/domain"
+	"github.com/73ai/infralayer/services/backend/internal/generic/httperrors"
 	"github.com/google/uuid"
 )
 

@@ -3,10 +3,10 @@ package identitysvctest
 import (
 	"context"
 
-	"github.com/73ai/infragpt/services/backend"
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc"
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc/domain"
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc/domaintest"
+	"github.com/73ai/infralayer/services/backend"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc/domain"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc/domaintest"
 )
 
 func NewConfig() Config {

@@ -19,7 +19,7 @@ export default defineConfig({
   server: {
     host: true,
     allowedHosts: [
-      'app-local.infragpt.io'
+      'app-local.infralayer.dev'
     ]
   }
 

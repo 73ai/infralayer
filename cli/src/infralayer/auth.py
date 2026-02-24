@@ -9,20 +9,20 @@ from typing import Optional
 import httpx
 from cryptography.fernet import InvalidToken
 
-from infragpt.config import CONFIG_DIR, console, get_console_base_url
-from infragpt.encryption import (
+from infralayer.config import CONFIG_DIR, console, get_console_base_url
+from infralayer.encryption import (
     encrypt_data,
     decrypt_data,
     secure_file_write,
     secure_file_read,
 )
-from infragpt.api_client import (
-    InfraGPTClient,
-    InfraGPTAPIError,
+from infralayer.api_client import (
+    InfraLayerClient,
+    InfraLayerAPIError,
     GCPCredentials,
     GKEClusterInfo,
 )
-from infragpt.exceptions import (
+from infralayer.exceptions import (
     AuthValidationError,
     TokenRefreshError,
     GCPCredentialError,
@@ -134,7 +134,7 @@ def refresh_token_if_needed() -> bool:
         return True
 
     try:
-        client = InfraGPTClient()
+        client = InfraLayerClient()
         result = client.refresh_token(refresh_token)
 
         from datetime import timedelta
@@ -150,19 +150,19 @@ def refresh_token_if_needed() -> bool:
 
         _save_auth_data(data)
         return True
-    except (InfraGPTAPIError, httpx.RequestError):
+    except (InfraLayerAPIError, httpx.RequestError):
         return False
 
 
 def login() -> None:
-    """Authenticate with InfraGPT platform using device flow."""
-    client = InfraGPTClient()
+    """Authenticate with InfraLayer platform using device flow."""
+    client = InfraLayerClient()
 
-    console.print("\n[bold]Authenticating with InfraGPT...[/bold]\n")
+    console.print("\n[bold]Authenticating with InfraLayer...[/bold]\n")
 
     try:
         flow = client.initiate_device_flow()
-    except InfraGPTAPIError as e:
+    except InfraLayerAPIError as e:
         console.print(f"[red]Error initiating authentication: {e.message}[/red]")
         raise SystemExit(1)
 
@@ -194,7 +194,7 @@ def login() -> None:
 
         try:
             result = client.poll_device_flow(flow.device_code)
-        except InfraGPTAPIError as e:
+        except InfraLayerAPIError as e:
             if e.status_code == 410:  # Expired
                 console.print("\n[red]Code expired. Please try again.[/red]")
                 raise SystemExit(1)
@@ -243,9 +243,9 @@ def logout() -> None:
 
     if data and data.get("access_token"):
         try:
-            client = InfraGPTClient()
+            client = InfraLayerClient()
             client.revoke_token(data["access_token"])
-        except (InfraGPTAPIError, httpx.RequestError):
+        except (InfraLayerAPIError, httpx.RequestError):
             pass  # Token may already be invalid; don't fail logout
 
     if AUTH_FILE.exists():
@@ -263,9 +263,9 @@ def fetch_gcp_credentials() -> Optional[GCPCredentials]:
         return None
 
     try:
-        client = InfraGPTClient()
+        client = InfraLayerClient()
         return client.get_gcp_credentials(status.access_token)
-    except InfraGPTAPIError:
+    except InfraLayerAPIError:
         return None
 
 
@@ -276,9 +276,9 @@ def fetch_gke_cluster_info() -> Optional[GKEClusterInfo]:
         return None
 
     try:
-        client = InfraGPTClient()
+        client = InfraLayerClient()
         return client.get_gke_cluster_info(status.access_token)
-    except InfraGPTAPIError:
+    except InfraLayerAPIError:
         return None
 
 
@@ -304,9 +304,9 @@ def validate_token_with_api() -> None:
         raise AuthValidationError("Not authenticated")
 
     try:
-        client = InfraGPTClient()
+        client = InfraLayerClient()
         client.validate_token(status.access_token)
-    except InfraGPTAPIError as e:
+    except InfraLayerAPIError as e:
         if e.status_code == 401:
             raise AuthValidationError("Token is invalid or expired") from e
         raise AuthValidationError(f"Failed to validate token: {e.message}") from e
@@ -343,7 +343,7 @@ def refresh_token_strict() -> None:
         return
 
     try:
-        client = InfraGPTClient()
+        client = InfraLayerClient()
         result = client.refresh_token(refresh_token)
 
         from datetime import timedelta
@@ -358,7 +358,7 @@ def refresh_token_strict() -> None:
         data["expires_at"] = expires_at_new.isoformat()
 
         _save_auth_data(data)
-    except InfraGPTAPIError as e:
+    except InfraLayerAPIError as e:
         raise TokenRefreshError(f"Failed to refresh token: {e.message}") from e
     except httpx.RequestError as e:
         raise TokenRefreshError(f"Failed to connect to server: {e}") from e
@@ -371,9 +371,9 @@ def fetch_gcp_credentials_strict() -> GCPCredentials:
         raise GCPCredentialError("Not authenticated")
 
     try:
-        client = InfraGPTClient()
+        client = InfraLayerClient()
         return client.get_gcp_credentials(status.access_token)
-    except InfraGPTAPIError as e:
+    except InfraLayerAPIError as e:
         if e.status_code == 404:
             raise GCPCredentialError(
                 "No GCP credentials configured for your organization"
@@ -390,9 +390,9 @@ def fetch_gke_cluster_info_strict() -> GKEClusterInfo:
         raise GKEClusterError("Not authenticated")
 
     try:
-        client = InfraGPTClient()
+        client = InfraLayerClient()
         return client.get_gke_cluster_info(status.access_token)
-    except InfraGPTAPIError as e:
+    except InfraLayerAPIError as e:
         if e.status_code == 404:
             raise GKEClusterError(
                 "No GKE cluster configured for your organization"

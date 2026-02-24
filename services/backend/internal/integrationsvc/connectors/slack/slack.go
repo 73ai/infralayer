@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/73ai/infragpt/services/backend"
+	"github.com/73ai/infralayer/services/backend"
 	"github.com/google/uuid"
 	"github.com/slack-go/slack"
 )

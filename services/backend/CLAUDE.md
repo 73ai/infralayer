@@ -41,7 +41,7 @@ The service follows clean architecture principles with dependency inversion:
 - `find . -name "*.go" -not -path "./vendor/*" -exec goimports -w {} \;` - Format code and organize imports (mandatory before commits)
 - `go run ./cmd/main.go` - Start the backend service (requires config.yaml)
 - `go build ./cmd/main.go` - Build production binary
-- `go build -o infragpt ./cmd/main.go` - Build with custom binary name
+- `go build -o infralayer ./cmd/main.go` - Build with custom binary name
 
 ### Testing and Quality Assurance
 - `go test ./...` - Run complete test suite

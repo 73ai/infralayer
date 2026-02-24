@@ -3,7 +3,7 @@ from typing import Optional
 
 import httpx
 
-from infragpt.config import get_api_base_url
+from infralayer.config import get_api_base_url
 
 
 @dataclass
@@ -47,14 +47,14 @@ class GKEClusterInfo:
     region: Optional[str] = None
 
 
-class InfraGPTAPIError(Exception):
+class InfraLayerAPIError(Exception):
     def __init__(self, status_code: int, message: str):
         self.status_code = status_code
         self.message = message
         super().__init__(f"API Error ({status_code}): {message}")
 
 
-class InfraGPTClient:
+class InfraLayerClient:
     def __init__(self, timeout: float = 30.0):
         self.api_base_url = get_api_base_url()
         self.timeout = timeout
@@ -90,13 +90,13 @@ class InfraGPTClient:
                         )
                     except Exception:
                         message = response.text or f"HTTP {response.status_code}"
-                    raise InfraGPTAPIError(response.status_code, message)
+                    raise InfraLayerAPIError(response.status_code, message)
 
                 return response.json()
         except httpx.TimeoutException:
-            raise InfraGPTAPIError(0, "Request timed out")
+            raise InfraLayerAPIError(0, "Request timed out")
         except httpx.ConnectError:
-            raise InfraGPTAPIError(
+            raise InfraLayerAPIError(
                 0, f"Could not connect to server: {self.api_base_url}"
             )
 
@@ -179,7 +179,7 @@ class InfraGPTClient:
                 headers={"Authorization": f"Bearer {access_token}"},
             )
             return True
-        except InfraGPTAPIError as e:
+        except InfraLayerAPIError as e:
             if e.status_code == 404:
                 return True  # Valid token but no GCP credentials configured
             raise

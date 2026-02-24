@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/73ai/infragpt/services/backend/internal/generic/httperrors"
+	"github.com/73ai/infralayer/services/backend/internal/generic/httperrors"
 
-	"github.com/73ai/infragpt/services/backend"
+	"github.com/73ai/infralayer/services/backend"
 	"github.com/google/uuid"
 )
 

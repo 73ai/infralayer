@@ -1,5 +1,5 @@
-IMAGE_NAME = ghcr.io/73ai/infragpt-sandbox
-LOCAL_IMAGE = infragpt/sandbox:latest
+IMAGE_NAME = ghcr.io/73ai/infralayer-sandbox
+LOCAL_IMAGE = infralayer/sandbox:latest
 
 .PHONY: build build-amd64 build-arm64 push push-amd64 push-arm64 all login setup
 

@@ -12,7 +12,7 @@ def get_encryption_key() -> bytes:
     """Derive encryption key from machine-specific information."""
     hostname = platform.node()
     username = getpass.getuser()
-    salt = f"{hostname}:{username}:infragpt"
+    salt = f"{hostname}:{username}:infralayer"
 
     key_material = hashlib.sha256(salt.encode()).digest()
     # Fernet requires a 32-byte key, base64-encoded

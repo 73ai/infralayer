@@ -38,7 +38,7 @@ jobs:
       - name: Verify CLI installation
         run: |
           cd cli
-          uv run infragpt --help
+          uv run infralayer --help
 
       - name: Run tests (if they exist)
         run: |

@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/73ai/infragpt/services/backend"
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc/domain"
+	"github.com/73ai/infralayer/services/backend"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc/domain"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 )

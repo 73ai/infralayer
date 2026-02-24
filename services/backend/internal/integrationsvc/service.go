@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/73ai/infragpt/services/backend"
-	"github.com/73ai/infragpt/services/backend/internal/integrationsvc/connectors/github"
-	"github.com/73ai/infragpt/services/backend/internal/integrationsvc/domain"
+	"github.com/73ai/infralayer/services/backend"
+	"github.com/73ai/infralayer/services/backend/internal/integrationsvc/connectors/github"
+	"github.com/73ai/infralayer/services/backend/internal/integrationsvc/domain"
 	"github.com/google/uuid"
 )
 

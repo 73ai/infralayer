@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/73ai/infragpt/services/backend"
+	"github.com/73ai/infralayer/services/backend"
 )
 
 func Ensure(t *testing.T, f fixture) {

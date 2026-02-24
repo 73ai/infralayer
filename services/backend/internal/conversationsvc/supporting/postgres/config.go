@@ -1,7 +1,7 @@
 package postgres
 
 import (
-	"github.com/73ai/infragpt/services/backend/internal/generic/postgresconfig"
+	"github.com/73ai/infralayer/services/backend/internal/generic/postgresconfig"
 	_ "github.com/lib/pq"
 )
 

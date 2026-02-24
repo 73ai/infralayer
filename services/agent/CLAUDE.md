@@ -1,10 +1,10 @@
 # Agent Service
 
-This service provides intelligent AI processing capabilities for DevOps workflows within the InfraGPT platform.
+This service provides intelligent AI processing capabilities for DevOps workflows within the InfraLayer platform.
 
 ## Service Purpose
 
-The Agent Service is a Python-based AI processing component that serves as the intelligent brain of the InfraGPT platform. It handles natural language understanding, workflow orchestration, and contextual responses for infrastructure-related tasks. The service communicates with the main Go service via gRPC and provides AI-powered responses through Slack interactions.
+The Agent Service is a Python-based AI processing component that serves as the intelligent brain of the InfraLayer platform. It handles natural language understanding, workflow orchestration, and contextual responses for infrastructure-related tasks. The service communicates with the main Go service via gRPC and provides AI-powered responses through Slack interactions.
 
 ## Architecture
 
@@ -138,5 +138,5 @@ agent:
 ## Related Components
 
 - Main Backend service: `../backend/`
-- gRPC client: `../infragpt/infragptapi/client/python/`
-- Go domain models: `../infragpt/internal/infragptsvc/domain/agent.go`
+- gRPC client: `../infralayer/infralayerapi/client/python/`
+- Go domain models: `../infralayer/internal/infralayersvc/domain/agent.go`

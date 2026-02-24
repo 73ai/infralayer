@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "infragpt"
+name = "infralayer"
 version = "0.1.53"
-description = "InfraGPT is an AI assistant for interactively managing your infrastructure."
+description = "InfraLayer is an AI assistant for interactively managing your infrastructure."
 readme = "README.md"
 authors = [{ name = "Priyanshu Jain", email = "pj@73ai.org" }]
 requires-python = ">=3.13"
@@ -33,10 +33,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/73ai/infragpt"
+Homepage = "https://github.com/73ai/infralayer"
 
 [project.scripts]
-infragpt = "infragpt.main:cli"
+infralayer = "infralayer.main:cli"
 
 
 
