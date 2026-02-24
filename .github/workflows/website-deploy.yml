@@ -33,12 +33,9 @@ jobs:
         working-directory: services/website
         run: npm run build
         
-      - name: Install Netlify CLI
-        run: npm install -g netlify-cli
-        
-      - name: Deploy to Netlify
-        working-directory: services/website
-        run: netlify deploy --dir=dist --prod --message "Deploy from GitHub Actions"
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy services/website/dist --project-name=infralayer-website

@@ -194,3 +194,4 @@ services/mcp/*
 .aider*
 
 .claude/*
+.playwright-mcp/

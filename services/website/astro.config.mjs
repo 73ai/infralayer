@@ -9,7 +9,7 @@ import rehypeSlug from "rehype-slug";
 import { autolinkConfig } from "./plugins/rehype-autolink-config";
 
 export default defineConfig({
-	site: "https://infragpt.io",
+	site: "https://infralayer.dev",
 	vite: {
 		define: {
 			__DATE__: `'${new Date().toISOString()}'`,
@@ -25,8 +25,8 @@ export default defineConfig({
 			scope: "/",
 			registerType: "autoUpdate",
 			manifest: {
-				name: "InfraGPT",
-				short_name: "InfraGPT - AI SRE Copilot for the Cloud",
+				name: "InfraLayer",
+				short_name: "InfraLayer - AI SRE Copilot for the Cloud",
 				theme_color: "#ffffff",
 			},
 			workbox: {

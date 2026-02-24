@@ -12,8 +12,8 @@ export const get = async () => {
   );
 
   return rss({
-    title: "InfraGPT",
-    description: "InfraGPT - AI SRE Copilot for the Cloud",
+    title: "InfraLayer",
+    description: "InfraLayer - AI SRE Copilot for the Cloud",
     site: import.meta.env.SITE,
 
     items: posts.map((post) => ({
