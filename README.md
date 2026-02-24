@@ -4,6 +4,8 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/73ai/infralayer/deploy.yml)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/73ai/infralayer/publish.yml)
 
+> **Note:** InfraLayer was previously known as InfraGPT. The project has been renamed — all functionality remains the same.
+
 InfraLayer is an AI SRE Copilot for the Cloud that provides infrastructure management agents through Slack integration. The system consists of multiple services that work together to deliver intelligent DevOps workflows.
 
 
