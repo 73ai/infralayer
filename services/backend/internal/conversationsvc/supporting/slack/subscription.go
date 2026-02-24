@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/73ai/infragpt/services/backend/internal/conversationsvc/domain"
+	"github.com/73ai/infralayer/services/backend/internal/conversationsvc/domain"
 	"github.com/slack-go/slack/slackevents"
 	"github.com/slack-go/slack/socketmode"
 )

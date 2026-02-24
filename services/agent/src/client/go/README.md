@@ -11,7 +11,7 @@ import (
     "context"
     "log"
     
-    agent "github.com/73ai/infragpt/services/agent/client/go"
+    agent "github.com/73ai/infralayer/services/agent/client/go"
 )
 
 func main() {

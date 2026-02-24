@@ -25,7 +25,7 @@ const data = {
     },
     {
       title: "Documentation",
-      url: "https://docs.infragpt.io",
+      url: "https://docs.infralayer.dev",
       external: true,
       icon: BookOpen,
     },

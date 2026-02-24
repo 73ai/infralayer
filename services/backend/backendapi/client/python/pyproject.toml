@@ -9,7 +9,7 @@ description = "Python client for Backend service"
 readme = "README.md"
 requires-python = ">=3.13"
 authors = [
-    {name = "InfraGPT Team"}
+    {name = "InfraLayer Team"}
 ]
 classifiers = [
     "Development Status :: 4 - Beta",

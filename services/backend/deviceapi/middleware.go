@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/73ai/infragpt/services/backend/internal/devicesvc"
+	"github.com/73ai/infralayer/services/backend/internal/devicesvc"
 	"github.com/google/uuid"
 )
 

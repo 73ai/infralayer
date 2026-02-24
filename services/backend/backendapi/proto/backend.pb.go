@@ -137,7 +137,7 @@ const file_backend_proto_rawDesc = "" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05error2I\n" +
 	"\x0eBackendService\x127\n" +
-	"\tSendReply\x12\x19.backend.SendReplyCommand\x1a\x0f.backend.StatusB<Z:github.com/73ai/infragpt/services/backend/backendapi/protob\x06proto3"
+	"\tSendReply\x12\x19.backend.SendReplyCommand\x1a\x0f.backend.StatusB<Z:github.com/73ai/infralayer/services/backend/backendapi/protob\x06proto3"
 
 var (
 	file_backend_proto_rawDescOnce sync.Once

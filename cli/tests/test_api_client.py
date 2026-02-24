@@ -1,13 +1,13 @@
 from unittest.mock import patch
 import pytest
 
-from infragpt.api_client import InfraGPTClient, InfraGPTAPIError
+from infralayer.api_client import InfraLayerClient, InfraLayerAPIError
 
 
 class TestValidateToken:
     def test_returns_true_on_success(self):
-        with patch("infragpt.api_client.get_api_base_url", return_value="http://test"):
-            client = InfraGPTClient()
+        with patch("infralayer.api_client.get_api_base_url", return_value="http://test"):
+            client = InfraLayerClient()
         with patch.object(client, "_make_request") as mock_request:
             mock_request.return_value = {"service_account_json": "{}"}
             result = client.validate_token("valid-token")
@@ -19,27 +19,27 @@ class TestValidateToken:
             )
 
     def test_returns_true_on_404(self):
-        with patch("infragpt.api_client.get_api_base_url", return_value="http://test"):
-            client = InfraGPTClient()
+        with patch("infralayer.api_client.get_api_base_url", return_value="http://test"):
+            client = InfraLayerClient()
         with patch.object(client, "_make_request") as mock_request:
-            mock_request.side_effect = InfraGPTAPIError(404, "Not found")
+            mock_request.side_effect = InfraLayerAPIError(404, "Not found")
             result = client.validate_token("valid-token")
             assert result is True
 
     def test_raises_on_401(self):
-        with patch("infragpt.api_client.get_api_base_url", return_value="http://test"):
-            client = InfraGPTClient()
+        with patch("infralayer.api_client.get_api_base_url", return_value="http://test"):
+            client = InfraLayerClient()
         with patch.object(client, "_make_request") as mock_request:
-            mock_request.side_effect = InfraGPTAPIError(401, "Unauthorized")
-            with pytest.raises(InfraGPTAPIError) as exc_info:
+            mock_request.side_effect = InfraLayerAPIError(401, "Unauthorized")
+            with pytest.raises(InfraLayerAPIError) as exc_info:
                 client.validate_token("invalid-token")
             assert exc_info.value.status_code == 401
 
     def test_raises_on_other_errors(self):
-        with patch("infragpt.api_client.get_api_base_url", return_value="http://test"):
-            client = InfraGPTClient()
+        with patch("infralayer.api_client.get_api_base_url", return_value="http://test"):
+            client = InfraLayerClient()
         with patch.object(client, "_make_request") as mock_request:
-            mock_request.side_effect = InfraGPTAPIError(500, "Server error")
-            with pytest.raises(InfraGPTAPIError) as exc_info:
+            mock_request.side_effect = InfraLayerAPIError(500, "Server error")
+            with pytest.raises(InfraLayerAPIError) as exc_info:
                 client.validate_token("token")
             assert exc_info.value.status_code == 500

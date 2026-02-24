@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc/domain"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc/domain"
 	"github.com/lib/pq"
 )
 

@@ -26,7 +26,7 @@ export function UseCasesStep({ form }: UseCasesStepProps) {
             <div className="mb-4">
               <FormLabel className="text-base">Use Cases</FormLabel>
               <FormDescription>
-                Select all the areas where you want to use InfraGPT
+                Select all the areas where you want to use InfraLayer
               </FormDescription>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

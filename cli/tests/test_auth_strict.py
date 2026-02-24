@@ -1,19 +1,19 @@
 from unittest.mock import MagicMock, patch
 import pytest
 
-from infragpt.auth import (
+from infralayer.auth import (
     validate_token_with_api,
     refresh_token_strict,
     fetch_gcp_credentials_strict,
     fetch_gke_cluster_info_strict,
     AuthStatus,
 )
-from infragpt.api_client import (
-    InfraGPTAPIError,
+from infralayer.api_client import (
+    InfraLayerAPIError,
     GCPCredentials,
     GKEClusterInfo,
 )
-from infragpt.exceptions import (
+from infralayer.exceptions import (
     AuthValidationError,
     TokenRefreshError,
     GCPCredentialError,
@@ -23,19 +23,19 @@ from infragpt.exceptions import (
 
 class TestValidateTokenWithApi:
     def test_raises_when_not_authenticated(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(authenticated=False)
             with pytest.raises(AuthValidationError, match="Not authenticated"):
                 validate_token_with_api()
 
     def test_raises_on_401(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(
                 authenticated=True, access_token="token"
             )
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
-                mock_client.validate_token.side_effect = InfraGPTAPIError(
+                mock_client.validate_token.side_effect = InfraLayerAPIError(
                     401, "Unauthorized"
                 )
                 mock_client_class.return_value = mock_client
@@ -45,11 +45,11 @@ class TestValidateTokenWithApi:
                     validate_token_with_api()
 
     def test_raises_on_connection_error(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(
                 authenticated=True, access_token="token"
             )
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
                 import httpx
 
@@ -63,11 +63,11 @@ class TestValidateTokenWithApi:
                     validate_token_with_api()
 
     def test_success(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(
                 authenticated=True, access_token="token"
             )
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
                 mock_client.validate_token.return_value = True
                 mock_client_class.return_value = mock_client
@@ -76,26 +76,26 @@ class TestValidateTokenWithApi:
 
 class TestRefreshTokenStrict:
     def test_raises_when_no_auth_data(self):
-        with patch("infragpt.auth._load_auth_data") as mock_load:
+        with patch("infralayer.auth._load_auth_data") as mock_load:
             mock_load.return_value = None
             with pytest.raises(TokenRefreshError, match="No auth data found"):
                 refresh_token_strict()
 
     def test_raises_when_no_refresh_token(self):
-        with patch("infragpt.auth._load_auth_data") as mock_load:
+        with patch("infralayer.auth._load_auth_data") as mock_load:
             mock_load.return_value = {"access_token": "token"}
             with pytest.raises(TokenRefreshError, match="No refresh token available"):
                 refresh_token_strict()
 
     def test_raises_on_api_error(self):
-        with patch("infragpt.auth._load_auth_data") as mock_load:
+        with patch("infralayer.auth._load_auth_data") as mock_load:
             mock_load.return_value = {
                 "access_token": "token",
                 "refresh_token": "refresh",
             }
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
-                mock_client.refresh_token.side_effect = InfraGPTAPIError(
+                mock_client.refresh_token.side_effect = InfraLayerAPIError(
                     400, "Invalid refresh token"
                 )
                 mock_client_class.return_value = mock_client
@@ -105,19 +105,19 @@ class TestRefreshTokenStrict:
 
 class TestFetchGcpCredentialsStrict:
     def test_raises_when_not_authenticated(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(authenticated=False)
             with pytest.raises(GCPCredentialError, match="Not authenticated"):
                 fetch_gcp_credentials_strict()
 
     def test_raises_on_404(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(
                 authenticated=True, access_token="token"
             )
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
-                mock_client.get_gcp_credentials.side_effect = InfraGPTAPIError(
+                mock_client.get_gcp_credentials.side_effect = InfraLayerAPIError(
                     404, "Not found"
                 )
                 mock_client_class.return_value = mock_client
@@ -128,11 +128,11 @@ class TestFetchGcpCredentialsStrict:
                     fetch_gcp_credentials_strict()
 
     def test_success(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(
                 authenticated=True, access_token="token"
             )
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
                 mock_client.get_gcp_credentials.return_value = GCPCredentials(
                     service_account_json='{"type":"service_account"}',
@@ -145,19 +145,19 @@ class TestFetchGcpCredentialsStrict:
 
 class TestFetchGkeClusterInfoStrict:
     def test_raises_when_not_authenticated(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(authenticated=False)
             with pytest.raises(GKEClusterError, match="Not authenticated"):
                 fetch_gke_cluster_info_strict()
 
     def test_raises_on_404(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(
                 authenticated=True, access_token="token"
             )
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
-                mock_client.get_gke_cluster_info.side_effect = InfraGPTAPIError(
+                mock_client.get_gke_cluster_info.side_effect = InfraLayerAPIError(
                     404, "Not found"
                 )
                 mock_client_class.return_value = mock_client
@@ -168,11 +168,11 @@ class TestFetchGkeClusterInfoStrict:
                     fetch_gke_cluster_info_strict()
 
     def test_success(self):
-        with patch("infragpt.auth.get_auth_status") as mock_status:
+        with patch("infralayer.auth.get_auth_status") as mock_status:
             mock_status.return_value = AuthStatus(
                 authenticated=True, access_token="token"
             )
-            with patch("infragpt.auth.InfraGPTClient") as mock_client_class:
+            with patch("infralayer.auth.InfraLayerClient") as mock_client_class:
                 mock_client = MagicMock()
                 mock_client.get_gke_cluster_info.return_value = GKEClusterInfo(
                     cluster_name="test-cluster",

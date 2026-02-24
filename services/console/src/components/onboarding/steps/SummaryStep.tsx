@@ -90,7 +90,7 @@ export function SummaryStep({ form }: SummaryStepProps) {
 
       <div className="text-sm text-muted-foreground">
         Click "Complete Setup" to save your information and start using
-        InfraGPT.
+        InfraLayer.
       </div>
     </div>
   );

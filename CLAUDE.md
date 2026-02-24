@@ -1,6 +1,6 @@
-# InfraGPT Platform
+# InfraLayer Platform
 
-InfraGPT is a multi-service AI SRE platform that converts natural language into infrastructure commands and automates DevOps workflows through intelligent integrations.
+InfraLayer is a multi-service AI SRE platform that converts natural language into infrastructure commands and automates DevOps workflows through intelligent integrations.
 
 ## Architecture
 

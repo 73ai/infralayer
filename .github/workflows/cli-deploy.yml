@@ -37,7 +37,7 @@ jobs:
           cd cli
           # Run the bump_version script with patch and commit flags
           # Use echo to automatically confirm the prompt
-          echo "y" | python src/infragpt/bump_version.py patch --commit
+          echo "y" | python src/infralayer/bump_version.py patch --commit
 
       - name: Push changes
         run: |

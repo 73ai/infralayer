@@ -77,7 +77,7 @@ export const IntegrationConfiguration: React.FC<
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-500">Bot User</span>
-                    <p className="font-medium">@infragpt</p>
+                    <p className="font-medium">@infralayer</p>
                   </div>
                   <div>
                     <span className="text-gray-500">Response Mode</span>
@@ -276,7 +276,7 @@ export const IntegrationConfiguration: React.FC<
                 </p>
                 <p className="text-blue-700 mt-1">
                   All credentials are encrypted using AES-256-GCM and stored
-                  securely. InfraGPT only accesses the permissions explicitly
+                  securely. InfraLayer only accesses the permissions explicitly
                   granted during setup.
                 </p>
               </div>

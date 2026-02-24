@@ -3,8 +3,8 @@ package backendapi
 import (
 	"context"
 
-	"github.com/73ai/infragpt/services/backend"
-	"github.com/73ai/infragpt/services/backend/backendapi/proto"
+	"github.com/73ai/infralayer/services/backend"
+	"github.com/73ai/infralayer/services/backend/backendapi/proto"
 	"google.golang.org/grpc"
 )
 

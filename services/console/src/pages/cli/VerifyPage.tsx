@@ -91,7 +91,7 @@ export default function CLIVerifyPage() {
           </div>
           <CardTitle>Authorize CLI</CardTitle>
           <CardDescription>
-            Enter the verification code displayed in your terminal to authorize the InfraGPT CLI.
+            Enter the verification code displayed in your terminal to authorize the InfraLayer CLI.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -113,7 +113,7 @@ export default function CLIVerifyPage() {
                   autoComplete="off"
                 />
                 <p className="text-xs text-muted-foreground">
-                  The code is displayed when you run <code className="bg-muted px-1 py-0.5 rounded">infragpt auth login</code>
+                  The code is displayed when you run <code className="bg-muted px-1 py-0.5 rounded">infralayer auth login</code>
                 </p>
               </div>
               <Button type="submit" className="w-full" disabled={userCode.length < 9}>

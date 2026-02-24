@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to build and publish InfraGPT to PyPI
+# Script to build and publish InfraLayer to PyPI
 
 # Clean previous builds
 rm -rf build/ dist/ *.egg-info/

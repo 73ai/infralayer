@@ -107,8 +107,8 @@ backendapi/
 ├── client.py                # Main client class
 ├── exceptions.py            # Custom exceptions
 └── generated/               # Auto-generated gRPC files
-    ├── infragpt_pb2.py      # Protobuf messages
-    └── infragpt_pb2_grpc.py # gRPC client stub
+    ├── infralayer_pb2.py      # Protobuf messages
+    └── infralayer_pb2_grpc.py # gRPC client stub
 ```
 
 ## Requirements

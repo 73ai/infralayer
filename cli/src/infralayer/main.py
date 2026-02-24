@@ -7,20 +7,20 @@ from typing import Optional, Tuple
 import click
 from rich.panel import Panel
 
-from infragpt.config import init_config, console
-from infragpt.llm.router import LLMRouter
-from infragpt.llm.exceptions import ValidationError, AuthenticationError
-from infragpt.history import history_command
-from infragpt.agent import run_shell_agent
-from infragpt.container import (
+from infralayer.config import init_config, console
+from infralayer.llm.router import LLMRouter
+from infralayer.llm.exceptions import ValidationError, AuthenticationError
+from infralayer.history import history_command
+from infralayer.agent import run_shell_agent
+from infralayer.container import (
     is_sandbox_mode,
     get_executor,
     cleanup_executor,
     cleanup_old_containers,
     DockerNotAvailableError,
 )
-from infragpt.tools import cleanup_executor as cleanup_tools_executor
-from infragpt.auth import (
+from infralayer.tools import cleanup_executor as cleanup_tools_executor
+from infralayer.auth import (
     login as auth_login,
     logout as auth_logout,
     get_auth_status,
@@ -32,7 +32,7 @@ from infragpt.auth import (
     write_gcp_credentials_file,
     cleanup_credentials,
 )
-from infragpt.exceptions import (
+from infralayer.exceptions import (
     AuthValidationError,
     TokenRefreshError,
     GCPCredentialError,
@@ -42,7 +42,7 @@ from infragpt.exceptions import (
 
 @click.group(invoke_without_command=True)
 @click.pass_context
-@click.version_option(package_name="infragpt")
+@click.version_option(package_name="infralayer")
 @click.option(
     "--model",
     "-m",
@@ -51,7 +51,7 @@ from infragpt.exceptions import (
 @click.option("--api-key", "-k", help="API key for the selected provider")
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
 def cli(ctx, model, api_key, verbose):
-    """InfraGPT V2 - Interactive shell operations with direct SDK integration."""
+    """InfraLayer V2 - Interactive shell operations with direct SDK integration."""
     if ctx.invoked_subcommand is None:
         main(model=model, api_key=api_key, verbose=verbose)
 
@@ -89,13 +89,13 @@ def providers_cli():
 
 @cli.group()
 def auth():
-    """Authentication commands for InfraGPT platform."""
+    """Authentication commands for InfraLayer platform."""
     pass
 
 
 @auth.command(name="login")
 def auth_login_cli():
-    """Authenticate with InfraGPT platform."""
+    """Authenticate with InfraLayer platform."""
     auth_login()
 
 
@@ -112,7 +112,7 @@ def auth_status_cli():
 
     if not status.authenticated:
         console.print("[yellow]Not authenticated.[/yellow]")
-        console.print("\nRun [cyan]infragpt auth login[/cyan] to authenticate.")
+        console.print("\nRun [cyan]infralayer auth login[/cyan] to authenticate.")
         return
 
     console.print("[green]Authenticated[/green]\n")
@@ -186,16 +186,16 @@ def get_credentials_v2(
 
 
 def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
-    """InfraGPT V2 - Interactive shell operations with direct SDK integration."""
+    """InfraLayer V2 - Interactive shell operations with direct SDK integration."""
     init_config()
 
     if verbose:
         from importlib.metadata import version
 
         try:
-            console.print(f"[dim]InfraGPT V2 version: {version('infragpt')}[/dim]")
+            console.print(f"[dim]InfraLayer V2 version: {version('infralayer')}[/dim]")
         except Exception:
-            console.print("[dim]InfraGPT V2: Version information not available[/dim]")
+            console.print("[dim]InfraLayer V2: Version information not available[/dim]")
 
     sandbox_started = False
     gcp_creds_path = None
@@ -207,7 +207,7 @@ def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
 
         if sandbox and not authenticated:
             console.print("[yellow]Sandbox mode requires authentication.[/yellow]")
-            console.print("\nRun [cyan]infragpt auth login[/cyan] to authenticate.")
+            console.print("\nRun [cyan]infralayer auth login[/cyan] to authenticate.")
             sys.exit(1)
 
         if authenticated and sandbox:
@@ -255,7 +255,7 @@ def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
 
     except (AuthValidationError, TokenRefreshError) as e:
         console.print(f"[red]Authentication Error: {e}[/red]")
-        console.print("\nRun [cyan]infragpt auth login[/cyan] to re-authenticate.")
+        console.print("\nRun [cyan]infralayer auth login[/cyan] to re-authenticate.")
         sys.exit(1)
     except GCPCredentialError as e:
         console.print(f"[red]Credential Error: {e}[/red]")
@@ -263,13 +263,13 @@ def main(model: Optional[str], api_key: Optional[str], verbose: bool) -> None:
     except (DockerNotAvailableError, ContainerSetupError) as e:
         console.print(f"[red]Error: {e}[/red]")
         console.print(
-            "Please fix the issue above or disable sandbox mode with INFRAGPT_ISOLATED=false"
+            "Please fix the issue above or disable sandbox mode with INFRALAYER_ISOLATED=false"
         )
         sys.exit(1)
     except ValidationError as e:
         console.print(f"[red]Validation Error: {e}[/red]")
         console.print(
-            "\nUse --help to see usage information or run 'infragpt providers' to see supported providers."
+            "\nUse --help to see usage information or run 'infralayer providers' to see supported providers."
         )
         sys.exit(1)
     except AuthenticationError as e:

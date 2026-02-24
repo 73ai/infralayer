@@ -8,7 +8,7 @@ from pathlib import Path
 
 def get_current_version() -> str:
     """Get the current version from __init__.py."""
-    init_file = Path("src/infragpt/__init__.py")
+    init_file = Path("src/infralayer/__init__.py")
     if not init_file.exists():
         raise FileNotFoundError(f"Could not find {init_file}")
 
@@ -17,14 +17,14 @@ def get_current_version() -> str:
 
     match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
     if not match:
-        raise ValueError("Could not find version string in src/infragpt/__init__.py")
+        raise ValueError("Could not find version string in src/infralayer/__init__.py")
 
     return match.group(1)
 
 
 def update_version(new_version: str) -> None:
     """Update version in __init__.py and pyproject.toml."""
-    init_file = Path("src/infragpt/__init__.py")
+    init_file = Path("src/infralayer/__init__.py")
     with open(init_file, "r") as f:
         content = f.read()
 
@@ -53,7 +53,7 @@ def update_version(new_version: str) -> None:
 def commit_and_tag(version: str) -> None:
     """Commit version bump and create a git tag."""
     subprocess.run(
-        ["git", "add", "src/infragpt/__init__.py", "pyproject.toml"], check=True
+        ["git", "add", "src/infralayer/__init__.py", "pyproject.toml"], check=True
     )
     subprocess.run(["git", "commit", "-m", f"Bump version to {version}"], check=True)
 
@@ -87,7 +87,7 @@ def bump_version(part: str = "patch") -> str:
 
 def main() -> None:
     """Main entry point for the version bump CLI."""
-    parser = argparse.ArgumentParser(description="Bump InfraGPT version")
+    parser = argparse.ArgumentParser(description="Bump InfraLayer version")
     parser.add_argument(
         "part",
         nargs="?",

@@ -3,9 +3,9 @@ package identitysvc
 import (
 	"database/sql"
 
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc/supporting/clerk"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc/supporting/clerk"
 
-	"github.com/73ai/infragpt/services/backend/internal/identitysvc/supporting/postgres"
+	"github.com/73ai/infralayer/services/backend/internal/identitysvc/supporting/postgres"
 )
 
 type Config struct {

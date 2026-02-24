@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/73ai/infragpt/services/backend/internal/devicesvc/domain"
+	"github.com/73ai/infralayer/services/backend/internal/devicesvc/domain"
 	"github.com/google/uuid"
 )
 

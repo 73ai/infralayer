@@ -1,5 +1,5 @@
 """
-InfraGPT Shell Agent for interactive command execution.
+InfraLayer Shell Agent for interactive command execution.
 """
 
 from typing import List, Dict, Any, Optional
@@ -106,7 +106,7 @@ class ModernShellAgent:
     def _setup_command_history(self):
         """Setup command history with persistent storage."""
         try:
-            history_dir = pathlib.Path.home() / ".infragpt"
+            history_dir = pathlib.Path.home() / ".infralayer"
             history_dir.mkdir(exist_ok=True)
             history_file = history_dir / "history"
 
@@ -136,7 +136,7 @@ class ModernShellAgent:
         """Run the main interactive agent session."""
         console.print(
             Panel.fit(
-                "InfraGPT Shell Agent V2 - Direct SDK Integration",
+                "InfraLayer Shell Agent V2 - Direct SDK Integration",
                 border_style="blue",
                 title="[bold green]Shell Agent V2[/bold green]",
             )

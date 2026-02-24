@@ -1,4 +1,4 @@
-module github.com/73ai/infragpt/services/agent/src/client/go
+module github.com/73ai/infralayer/services/agent/src/client/go
 
 go 1.24
 

@@ -1,5 +1,5 @@
 """
-Docker container execution module for InfraGPT CLI agent.
+Docker container execution module for InfraLayer CLI agent.
 
 This module provides isolated command execution in Docker containers with:
 - Real-time streaming output
@@ -20,14 +20,14 @@ from docker.errors import DockerException, APIError as DockerAPIError
 from docker.models.containers import Container
 from rich.console import Console
 
-from infragpt.api_client import GKEClusterInfo
-from infragpt.exceptions import ContainerSetupError
+from infralayer.api_client import GKEClusterInfo
+from infralayer.exceptions import ContainerSetupError
 
 console = Console()
 
-CONTAINER_NAME = "infragpt-sandbox"
+CONTAINER_NAME = "infralayer-sandbox"
 CONTAINER_STOP_TIMEOUT = 5
-CWD_MARKER = "__INFRAGPT_CWD__"
+CWD_MARKER = "__INFRALAYER_CWD__"
 
 
 def get_sandbox_image() -> str:
@@ -37,7 +37,7 @@ def get_sandbox_image() -> str:
         arch = "arm64"
     else:
         arch = "amd64"
-    return f"ghcr.io/73ai/infragpt-sandbox:latest-{arch}"
+    return f"ghcr.io/73ai/infralayer-sandbox:latest-{arch}"
 
 
 class DockerNotAvailableError(Exception):
@@ -72,9 +72,9 @@ def is_sandbox_mode() -> bool:
     """
     Check if sandbox mode is enabled.
 
-    Sandbox mode is enabled by default. Set INFRAGPT_ISOLATED=false to disable.
+    Sandbox mode is enabled by default. Set INFRALAYER_ISOLATED=false to disable.
     """
-    return os.environ.get("INFRAGPT_ISOLATED", "").lower() != "false"
+    return os.environ.get("INFRALAYER_ISOLATED", "").lower() != "false"
 
 
 def ensure_docker_available() -> None:
@@ -96,7 +96,7 @@ def cleanup_old_containers() -> int:
     client: Optional[DockerClient] = None
     try:
         client = docker.from_env()
-        image_prefix = "ghcr.io/73ai/infragpt-sandbox:"
+        image_prefix = "ghcr.io/73ai/infralayer-sandbox:"
         containers = client.containers.list(all=True)
         removed = 0
         for container in containers:

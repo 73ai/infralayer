@@ -347,4 +347,4 @@ See `/src/components/ActionlintExample.tsx` for a complete working example.
 
 ## License
 
-This hook is part of the InfraGPT project and follows the same license terms.
+This hook is part of the InfraLayer project and follows the same license terms.

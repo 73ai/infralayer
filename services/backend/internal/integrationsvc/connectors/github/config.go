@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/73ai/infragpt/services/backend/internal/integrationsvc/domain"
+	"github.com/73ai/infralayer/services/backend/internal/integrationsvc/domain"
 	"github.com/golang-jwt/jwt/v4"
 )
 

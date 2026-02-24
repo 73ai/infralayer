@@ -1,13 +1,13 @@
-# Contributing to InfraGPT
+# Contributing to InfraLayer
 
-Thank you for your interest in contributing to InfraGPT\! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to InfraLayer\! This document provides guidelines and instructions for contributing to the project.
 
 ## Development Setup
 
 1. Clone the repository:
    ```
-   git clone https://github.com/73ai/infragpt.git
-   cd infragpt
+   git clone https://github.com/73ai/infralayer.git
+   cd infralayer
    ```
 
 2. Install in development mode:
