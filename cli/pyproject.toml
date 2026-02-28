@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "infralayer"
-version = "0.1.54"
+version = "0.1.55"
 description = "InfraLayer is an AI assistant for interactively managing your infrastructure."
 readme = "README.md"
 authors = [{ name = "Priyanshu Jain", email = "pj@73ai.org" }]
