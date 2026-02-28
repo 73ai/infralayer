@@ -58,6 +58,9 @@
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
+  "overrides": {
+    "serialize-javascript": ">=7.0.3"
+  },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
     "@playwright/test": "^1.56.1",
