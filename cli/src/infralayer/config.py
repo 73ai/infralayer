@@ -23,6 +23,16 @@ def is_dev_mode() -> bool:
     return os.environ.get("INFRALAYER_DEV_MODE", "").lower() == "true"
 
 
+def is_yolo_mode() -> bool:
+    """Check if yolo mode is enabled (skips permission prompts)."""
+    return os.environ.get("INFRALAYER_YOLO_MODE", "").lower() == "true"
+
+
+def set_yolo_mode(enabled: bool) -> None:
+    """Set yolo mode via environment variable."""
+    os.environ["INFRALAYER_YOLO_MODE"] = "true" if enabled else "false"
+
+
 def get_api_base_url() -> str:
     if is_dev_mode():
         return "http://localhost:8080"
