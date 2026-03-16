@@ -1,0 +1,25 @@
+api:
+  addr: ":8081"
+  
+metrics:
+  addr: ":8080"
+  
+auth:
+  jwtSecret: "replace-with-real-secret-in-production"
+  tokenExpiration: "24h"
+  apiKeys:
+    admin: "replace-with-real-api-key-in-production"
+
+kubernetes:
+  inCluster: true
+  # Uncomment these if not running in cluster
+  # kubeconfig: ""
+  # masterURL: ""
+  
+controller:
+  enableLeaderElection: true
+  leaderElectionID: "mcp-controller-lock"
+  
+logging:
+  level: "info"
+  format: "json"
